@@ -1,0 +1,13 @@
+name: 'GitHub Notification'
+on:　[workflow_dispatch]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Discord notification
+        uses: stegzilla/discord-notify@v2
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: GitHub Notification
+          message: Completed
