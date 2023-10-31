@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: NotoSansJP-Regular SDF
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: 311269161
   material: {fileID: 3178035673130208129}
-  materialHashCode: 0
+  materialHashCode: 33873257
   m_Version: 1.1.0
   m_SourceFontFileGUID: 073a1374f7a8949b4b6b4a78955d14c9
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 073a1374f7a8949b4b6b4a78955d14c9, type: 3}
@@ -47,7 +47,7 @@ MonoBehaviour:
   m_AtlasTextures:
   - {fileID: 4178417057982897255}
   m_AtlasTextureIndex: 0
-  m_IsMultiAtlasTexturesEnabled: 0
+  m_IsMultiAtlasTexturesEnabled: 1
   m_ClearDynamicDataOnBuild: 0
   m_UsedGlyphRects: []
   m_FreeGlyphRects:
@@ -281,7 +281,7 @@ Texture2D:
     m_WrapV: 0
     m_WrapW: 0
   m_LightmapFormat: 0
-  m_ColorSpace: 1
+  m_ColorSpace: 0
   m_PlatformBlob: 
   image data: 0
   _typelessdata: 
