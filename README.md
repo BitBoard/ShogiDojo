@@ -9,6 +9,7 @@ Unityでの将棋ゲーム製作用リポジトリ
 - [今日からはじめるUnity](https://qiita.com/nmxi/items/7950fb12ef925efa276d)
 
 ### 素材
+- [将棋駒・盤](https://sunfish-shogi.github.io/shogi-images/)
 - [フリーBGM・効果音まとめ](https://miyagame.net/music/)
 - [ゲーム用素材まとめ](https://jp.eagle.cool/blog/post/free-game-assets)
 
