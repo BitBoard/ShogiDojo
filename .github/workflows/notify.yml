@@ -13,3 +13,5 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: GitHub Notification
           message: Completed
+          avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
+          user_name: GitHub Notifier
