@@ -7,6 +7,7 @@ Unityでの将棋ゲーム製作用リポジトリ
 - [Unity入門の森](https://3dunity.org/)
 - [Battle Tank](https://codegenius.org/open/courses/24/sections)
 - [今日からはじめるUnity](https://qiita.com/nmxi/items/7950fb12ef925efa276d)
+- [将棋ライブラリ（C#）](https://github.com/tomori-k/ShogiLibSharp)
 
 ### 素材
 - [将棋駒・盤](https://sunfish-shogi.github.io/shogi-images/)
