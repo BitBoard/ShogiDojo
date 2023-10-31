@@ -1,5 +1,7 @@
 name: 'GitHub Notification'
-on:　[pull_request, workflow_dispatch]
+
+on:
+  workflow_dispatch:
 
 jobs:
   notify:
