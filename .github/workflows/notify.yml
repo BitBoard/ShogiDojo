@@ -14,4 +14,4 @@ jobs:
           title: GitHub Notification
           message: Completed
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
-          user_name: GitHub Notifier
+          username: GitHub Notifier
