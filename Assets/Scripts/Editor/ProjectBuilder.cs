@@ -42,6 +42,9 @@ public class ProjectBuilder
     private static void Build(BuildOptions buildOptions, BuildTarget buildTarget, bool isCICD = false)
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
+        
+        // ビルド対象のシーン
+        buildPlayerOptions.scenes = EditorBuildSettingsScene.GetActiveSceneList(EditorBuildSettings.scenes);
         // ビルド出力先
         buildPlayerOptions.locationPathName = "Build";
         // ビルドの種類
