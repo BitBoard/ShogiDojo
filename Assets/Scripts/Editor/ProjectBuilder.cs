@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using System;
 
 /// <summary>
 /// コマンドラインビルドを行う際に実行するためのエディタ拡張(GitHub Actionsでのビルド時など)
@@ -64,11 +65,26 @@ public class ProjectBuilder
         {
             Debug.LogError("Build Failed");
         }
-        
+
         if (isCICD)
         {
             //成否に応じてUnityEditorの終了プロセスを決定する
-            EditorApplication.Exit(summary.result == BuildResult.Succeeded ? 0 : 1);
+            switch (summary.result)
+            {
+                case BuildResult.Succeeded:
+                    Console.WriteLine("Build succeeded!");
+                    if (summary.totalErrors > 0)
+                    {
+                        EditorApplication.Exit(1);
+                        break;
+                    }
+                    EditorApplication.Exit(0);
+                    break;
+                case BuildResult.Failed:
+                    Console.WriteLine("Build failed!");
+                    EditorApplication.Exit(1);
+                    break;
+            }
         }
     }
 }
