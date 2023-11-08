@@ -23,7 +23,23 @@ public class ProjectBuilder
         Build(BuildOptions.Development, BuildTarget.WebGL);
     }
 
-    private static void Build(BuildOptions buildOptions, BuildTarget buildTarget)
+    /// <summary>
+    /// CICDのワークフローからリリースビルドを実行する時はこちらを呼び出す
+    /// </summary>
+    private static void ReleaseBuildForCICD()
+    {
+        Build(BuildOptions.None, BuildTarget.WebGL, true);
+    }
+
+    /// <summary>
+    /// CICDのワークフローから開発ビルドを実行する時はこちらを呼び出す
+    /// </summary>
+    private static void DevelopBuildForCICD()
+    {
+        Build(BuildOptions.Development, BuildTarget.WebGL, true);
+    }
+
+    private static void Build(BuildOptions buildOptions, BuildTarget buildTarget, bool isCICD = false)
     {
         BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
         // ビルド出力先
@@ -44,6 +60,12 @@ public class ProjectBuilder
         else if (summary.result == BuildResult.Failed)
         {
             Debug.LogError("Build Failed");
+        }
+        
+        if (isCICD)
+        {
+            //成否に応じてUnityEditorの終了プロセスを決定する
+            EditorApplication.Exit(summary.result == BuildResult.Succeeded ? 0 : 1);
         }
     }
 }
