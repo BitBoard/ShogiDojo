@@ -33,7 +33,7 @@ public class GameSceneController : MonoBehaviour
 	{
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
 		Debug.Log("デバッグメニューを閉じる");
-		view.DebugMenu.SetActive(true);
+		view.DebugMenu.SetActive(false);
 #endif
 	}
 }
