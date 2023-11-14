@@ -1,5 +1,5 @@
 ﻿[System.Serializable]
 public class BoardData
 {
-    public PositionData[] positionData;
+    public PositionData[] boardData;
 }
