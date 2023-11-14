@@ -1,0 +1,23 @@
+{
+    "boardData" : [
+        {"y":2, "x":0, "pieceType":"white_pawn"},
+        {"y":2, "x":1, "pieceType":"white_pawn"},
+        {"y":2, "x":2, "pieceType":"white_pawn"},
+        {"y":2, "x":3, "pieceType":"white_pawn"},
+        {"y":2, "x":4, "pieceType":"white_pawn"},
+        {"y":2, "x":5, "pieceType":"white_pawn"},
+        {"y":2, "x":6, "pieceType":"white_pawn"},
+        {"y":2, "x":7, "pieceType":"white_pawn"},
+        {"y":2, "x":8, "pieceType":"white_pawn"},
+
+        {"y":6, "x":0, "pieceType":"black_pawn"},
+        {"y":6, "x":1, "pieceType":"black_pawn"},
+        {"y":6, "x":2, "pieceType":"black_pawn"},
+        {"y":6, "x":3, "pieceType":"black_pawn"},
+        {"y":6, "x":4, "pieceType":"black_pawn"},
+        {"y":6, "x":5, "pieceType":"black_pawn"},
+        {"y":6, "x":6, "pieceType":"black_pawn"},
+        {"y":6, "x":7, "pieceType":"black_pawn"},
+        {"y":6, "x":8, "pieceType":"black_pawn"}
+    ]
+}
