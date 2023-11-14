@@ -61,7 +61,7 @@ public class GameSceneController : MonoBehaviour
         var boardData = JsonUtility.FromJson<BoardData>(json);
 
 		Debug.Log(boardData);
-        foreach (var data in boardData.positionData)
+        foreach (var data in boardData.boardData)
         {
             var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
             piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
