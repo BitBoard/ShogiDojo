@@ -1,10 +1,12 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameSceneController : MonoBehaviour
 {
 	[SerializeField] private GameSceneView view;
-	private int boardSize = 81;
+	[SerializeField] private GameObject piecePrefab;
+    private int boardSize = 81;
     private int boardColumns = 9;
     private int boardRows = 9;
     private Cell[,] cells;
@@ -18,6 +20,7 @@ public class GameSceneController : MonoBehaviour
 	{
 		SetEvent();
         SetCells();
+		InitBoard();
 	}
 	
 	private void SetEvent()
@@ -49,6 +52,19 @@ public class GameSceneController : MonoBehaviour
 			{
 				x++;
 			}
+        }
+    }
+
+	private void InitBoard()
+	{
+		var json = Resources.Load<TextAsset>("Data/initial-board").ToString();
+        var boardData = JsonUtility.FromJson<BoardData>(json);
+
+		Debug.Log(boardData);
+        foreach (var data in boardData.positionData)
+        {
+            var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
+            piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
         }
     }
 	

@@ -6086,6 +6086,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   view: {fileID: 400231706}
+  piecePrefab: {fileID: 7715699962658066538, guid: 758028ea4c45d456793263e318ae0b01, type: 3}
 --- !u!1001 &1428600209
 PrefabInstance:
   m_ObjectHideFlags: 0
