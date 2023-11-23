@@ -1,7 +1,8 @@
 name: 'GitHub Notification'
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches: [ master ]
 
 jobs:
   notify:
@@ -12,6 +13,6 @@ jobs:
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: GitHub Notification
-          message: Completed
+          message: "**${{ github.event.pull_request.title }}**\n**Creator:** ${{ github.event.pull_request.user.login }}\n${{ github.event.pull_request.html_url }}"
           avatar_url: https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png
           username: GitHub Notifier
