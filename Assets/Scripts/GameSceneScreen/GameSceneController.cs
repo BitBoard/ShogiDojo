@@ -65,7 +65,7 @@ public class GameSceneController : MonoBehaviour
         {
             var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
             piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
-            piece.GetComponent<Piece>().pieceName = data.pieceType;
+            piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
         }
     }
 	

@@ -1,7 +1,13 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class Piece : MonoBehaviour
+public class Piece : MonoBehaviour, IPointerClickHandler
 {
-    public string pieceName;
+    public PieceData.PieceType pieceType;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log(this.pieceType.ToString());
+    }
 }
