@@ -36,7 +36,7 @@
         {"y":7, "x":1, "pieceType":"black_bishop"},
         {"y":7, "x":7, "pieceType":"black_rook"},
 
-        {"y":8, "x":0, "pieceType":"black_bishop"},
+        {"y":8, "x":0, "pieceType":"black_lance"},
         {"y":8, "x":1, "pieceType":"black_knight"},
         {"y":8, "x":2, "pieceType":"black_silver"},
         {"y":8, "x":3, "pieceType":"black_gold"},
