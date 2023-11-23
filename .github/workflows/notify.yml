@@ -2,7 +2,7 @@ name: 'GitHub Notification'
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   notify:
