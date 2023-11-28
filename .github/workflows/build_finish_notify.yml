@@ -1,7 +1,6 @@
 name: 'GitHub Build Finish Notification'
 
 env:
-  PERSONAL_ACCESS_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
   DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
 on:
@@ -27,5 +26,6 @@ jobs:
       - name: send download artifact page url
         env:
           GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python .github/send_download_artifact_url/send-download-artifact-page-url.py

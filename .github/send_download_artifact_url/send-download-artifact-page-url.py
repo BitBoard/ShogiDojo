@@ -7,10 +7,10 @@ load_dotenv()
 
 headers = {
     "Accept": "application/vnd.github.v3+json",
-    "Authorization": os.getenv("PERSONAL_ACCESS_TOKEN"),
+    "Authorization": os.getenv("GITHUB_TOKEN"),
 }
 
-req = requests.get(f" https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/actions/artifacts",
+res = requests.get(f" https://api.github.com/repos/{os.getenv('GITHUB_REPOSITORY')}/actions/artifacts",
                    headers=headers).json()
 
 
@@ -32,4 +32,4 @@ def message(url):
     return content
 
 
-requests.post(os.getenv("DISCORD_WEBHOOK_URL"), message(get_download_url(req)))
+requests.post(os.getenv("DISCORD_WEBHOOK_URL"), message(get_download_url(res)))
