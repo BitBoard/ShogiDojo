@@ -20,3 +20,6 @@ Unityでの将棋ゲーム製作用リポジトリ
 
 ### Git
 - [Gitコマンドチートシート](https://training.github.com/downloads/ja/github-git-cheat-sheet.pdf)
+
+### 動作環境
+- [将棋道場 - unityroom](https://unityroom.com/games/shogidojo)
