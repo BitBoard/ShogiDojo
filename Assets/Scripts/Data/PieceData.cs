@@ -22,6 +22,18 @@ public class PieceData {
         BlackKing
     }
 
+    public class PicecePotition
+    {
+        public int x;
+        public int y;
+
+        public PicecePotition(int x, int y) 
+        {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
     public static PieceType StrToPieceType(string pieceTypeStr)
     {
         // ここで文字列からswitch文でPieceTypeに変換する
