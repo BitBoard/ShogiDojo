@@ -10,6 +10,8 @@ public class GameSceneController : MonoBehaviour
     private int boardColumns = 9;
     private int boardRows = 9;
     private Cell[,] cells;
+    private Piece selectedPiece = null;
+    private bool isPieceSelected = false;
 	
 	private void Awake()
 	{
@@ -44,6 +46,16 @@ public class GameSceneController : MonoBehaviour
         for (int i = 0; i < boardSize; i++)
         {
             cells[y, x] = cellArray[i];
+            cells[y, x].x = x;
+            cells[y, x].y = y;
+            var cell = cells[y, x];
+            cell.OnClickAction += () =>
+			{
+				if (selectedPiece != null)
+				{
+					MovePiece(cell);
+				}
+			};
 			if((i+1) % boardColumns == 0)
             {
                 y++;
@@ -66,10 +78,39 @@ public class GameSceneController : MonoBehaviour
             var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
             piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
             piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
-			piece.GetComponent<Piece>().picecePotition = new PieceData.PicecePotition(data.x, data.y);
+			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
+			piece.GetComponent<Piece>().OnClickAction += () =>
+			{
+				SelectPiece(piece.GetComponent<Piece>());
+			};
         }
     }
 	
+	private void SelectPiece(Piece piece)
+	{
+		// 駒を選択する
+		selectedPiece = piece;
+		isPieceSelected = true;
+		Debug.Log("選択した駒:" + piece.ToString());
+	}
+
+	private void MovePiece(Cell cell)
+	{
+		if (!isPieceSelected)
+		{
+			return;
+		}
+		// 選択されている駒を移動させる
+		selectedPiece.transform.SetParent(cell.transform);
+		// 駒の位置を更新する
+		selectedPiece.transform.localPosition = Vector3.zero;
+		selectedPiece.piecePotition = new PieceData.PiecePotition(cell.x, cell.y);
+		Debug.Log("移動した駒:" + selectedPiece.ToString());
+		isPieceSelected = false;
+		selectedPiece = null;
+		
+	}
+
 	public void OpenDebugMenu()
 	{
 #if DEVELOPMENT_BUILD || UNITY_EDITOR

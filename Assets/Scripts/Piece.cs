@@ -1,14 +1,24 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 public class Piece : MonoBehaviour, IPointerClickHandler
 {
     public PieceData.PieceType pieceType;
-    public PieceData.PicecePotition picecePotition;
+    public PieceData.PiecePotition piecePotition;
+    public UnityAction OnClickAction;
+    
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log(Converter.PosToSign(this.picecePotition.x, this.picecePotition.y) + " " + this.pieceType.ToString() + " x:" +this.picecePotition.x + " y:" + this.picecePotition.y);
+        Debug.Log(ToString());
+        OnClickAction.Invoke();
+    }
+
+    public override string ToString()
+    {
+        return Converter.PosToSign(this.piecePotition.x, this.piecePotition.y) + " " + this.pieceType.ToString() +
+               " x:" + this.piecePotition.x + " y:" + this.piecePotition.y;
     }
 }

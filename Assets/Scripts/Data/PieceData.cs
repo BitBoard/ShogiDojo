@@ -22,12 +22,12 @@ public class PieceData {
         BlackKing
     }
 
-    public class PicecePotition
+    public class PiecePotition
     {
         public int x;
         public int y;
 
-        public PicecePotition(int x, int y) 
+        public PiecePotition(int x, int y) 
         {
             this.x = x;
             this.y = y;
