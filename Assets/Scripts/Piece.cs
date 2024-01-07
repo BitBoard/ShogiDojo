@@ -9,6 +9,6 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log(this.pieceType.ToString() + " x:" +this.picecePotition.x + " y:" + this.picecePotition.y);
+        Debug.Log(Converter.PosToSign(this.picecePotition.x, this.picecePotition.y) + " " + this.pieceType.ToString() + " x:" +this.picecePotition.x + " y:" + this.picecePotition.y);
     }
 }
