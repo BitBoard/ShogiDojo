@@ -1,0 +1,20 @@
+public enum PieceType
+{
+	None,
+	WhitePawn,
+	WhiteLance,
+	WhiteKnight,
+	WhiteSilver,
+	WhiteGold,
+	WhiteBishop,
+	WhiteRook,
+	WhiteKing,
+	BlackPawn,
+	BlackLance,
+	BlackKnight,
+	BlackSilver,
+	BlackGold,
+	BlackBishop,
+	BlackRook,
+	BlackKing
+}

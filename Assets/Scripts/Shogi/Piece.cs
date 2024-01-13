@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class Piece : MonoBehaviour, IPointerClickHandler
 {
-    public PieceData.PieceType pieceType;
+    public PieceType pieceType;
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
     
