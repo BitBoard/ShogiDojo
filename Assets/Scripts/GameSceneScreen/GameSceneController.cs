@@ -105,6 +105,10 @@ public class GameSceneController : MonoBehaviour
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
 		selectedPiece.piecePotition = new PieceData.PiecePotition(cell.x, cell.y);
+
+		// 駒音を再生する
+		selectedPiece.GetComponent<AudioSource>().Play();
+
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		isPieceSelected = false;
 		selectedPiece = null;
