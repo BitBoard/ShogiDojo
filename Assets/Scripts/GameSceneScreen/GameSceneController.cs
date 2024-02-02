@@ -17,6 +17,11 @@ public class GameSceneController : MonoBehaviour
 	{
 		Init();
 	}
+	
+	private void Start()
+	{
+		var gameState = new GameState();
+	}
 
 	private void Init()
 	{
