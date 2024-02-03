@@ -1,22 +1,19 @@
 using System.Collections.Generic;
+using MyShogi.Model.Shogi.Core;
+using UnityEngine;
 
 /// <summary>
 /// ゲームの状態を表すクラス
 /// </summary>
 public class GameState
 {
-	public PieceType[,] board; // 盤面
-	public List<PieceType> capturedPieces; // 持ち駒
-	public bool isCheck = false; // 王手がかかっているかどうか
-	
-	public GameState(BoardData boardData)
+
+	public GameState()
 	{
-		board = new PieceType[9,9];
-		capturedPieces = new List<PieceType>();
-		foreach (var data in boardData.boardData)
-		{
-			board[data.x, data.y] = PieceData.StrToPieceType(data.pieceType);
-		}
+		Initializer.Init();
+		var position = new Position();
+		position.InitBoard();
+		Debug.Log(position.Pretty());
 	}
 	
 	/// <summary>
