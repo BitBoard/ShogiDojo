@@ -7,30 +7,32 @@ using UnityEngine;
 /// </summary>
 public class GameState
 {
+	private Position position;
 
 	public GameState()
 	{
-		Initializer.Init();
-		var position = new Position();
+		position = new Position();
 		position.InitBoard();
-		Debug.Log(position.Pretty());
 	}
 	
 	/// <summary>
 	/// 現在の手番プレイヤーの合法手を返す
 	/// </summary>
 	/// <returns></returns>
-	public List<string> GetLegalMoves()
+	public Move[] GetLegalMoves()
 	{
-		return new List<string>();
+		var moves = new Move[(int)Move.MAX_MOVES];
+		var _ = MoveGen.LegalAll(position, moves, 0);
+
+		return moves;
 	}
 
 	/// <summary>
 	/// 指定手を着手し局面を進める
 	/// </summary>
-	public void Advance()
+	public void Advance(Move move)
 	{
-		
+		position.DoMove(move);
 	}
 	
 	/// <summary>
@@ -40,6 +42,11 @@ public class GameState
 	public bool IsGameEnd()
 	{
 		return false;
+	}
+	
+	public void ShowBoard()
+	{
+		Debug.Log(position.Pretty());
 	}
 	
 }

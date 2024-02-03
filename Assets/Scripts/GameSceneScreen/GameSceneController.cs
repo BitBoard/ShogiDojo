@@ -1,4 +1,5 @@
 using System;
+using MyShogi.Model.Shogi.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,12 +16,18 @@ public class GameSceneController : MonoBehaviour
 	
 	private void Awake()
 	{
+		Initializer.Init(); // ゲームが始まる時に一回だけ呼ぶ
 		Init();
 	}
 	
 	private void Start()
 	{
 		var gameState = new GameState();
+		IShogiAI ai = new RandomAI();
+		gameState.ShowBoard();
+		var move = ai.GetMove(gameState);
+		gameState.Advance(move);
+		gameState.ShowBoard();
 	}
 
 	private void Init()
