@@ -1,3 +1,5 @@
+using MyShogi.Model.Shogi.Core;
+
 public class Converter
 {
 	/// <summary>
@@ -55,5 +57,12 @@ public class Converter
 			default:
 				return "";
 		}
+	}
+
+	public static Square PosToSquare(int x, int y)
+	{
+		var file = (File)(8 - x);
+		var rank = (Rank)(y);
+		return Util.MakeSquare(file, rank);
 	}
 }

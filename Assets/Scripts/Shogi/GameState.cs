@@ -41,16 +41,20 @@ public class GameState
 	{
 		position.DoMove(move);
 	}
-	
+
 	/// <summary>
-	/// ゲームが終了しているかどうかを判定する
+	/// 現局面で手番のプレイヤーが詰んでいるかどうかを判定する
 	/// </summary>
 	/// <returns></returns>
-	public bool IsGameEnd()
+	public bool IsMated()
 	{
-		return false;
+		var moves = new Move[(int)Move.MAX_MOVES];
+		return position.IsMated(moves);
 	}
 	
+	/// <summary>
+	/// 現局面の盤面情報を表示する
+	/// </summary>
 	public void ShowBoard()
 	{
 		Debug.Log(position.Pretty());

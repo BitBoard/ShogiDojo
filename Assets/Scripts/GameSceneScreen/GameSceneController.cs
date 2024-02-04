@@ -16,7 +16,6 @@ public class GameSceneController : MonoBehaviour
 	
 	private void Awake()
 	{
-		Initializer.Init(); // ゲームが始まる時に一回だけ呼ぶ
 		Init();
 	}
 	
@@ -28,6 +27,12 @@ public class GameSceneController : MonoBehaviour
 		var move = ai.GetMove(gameState);
 		Debug.Log("AIの指し手:" + move.Pretty());
 		gameState.Advance(move);
+		gameState.ShowBoard();
+		var from = Converter.PosToSquare(1, 1);
+		var to = Converter.PosToSquare(4, 1);
+		var move2 = Util.MakeMove(from, to);
+		Debug.Log("後手の指し手:" + move2.Pretty());
+		gameState.Advance(move2);
 		gameState.ShowBoard();
 	}
 
