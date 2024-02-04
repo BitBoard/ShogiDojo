@@ -19,12 +19,19 @@ public class GameState
 	/// 現在の手番プレイヤーの合法手を返す
 	/// </summary>
 	/// <returns></returns>
-	public Move[] GetLegalMoves()
+	public List<Move> GetLegalMoves()
 	{
 		var moves = new Move[(int)Move.MAX_MOVES];
-		var _ = MoveGen.LegalAll(position, moves, 0);
-
-		return moves;
+		var endIndex = MoveGen.LegalAll(position, moves, 0);
+		
+		// endIndexまでの指し手が合法手
+		var legalMoves = new List<Move>();
+		for (var i = 0; i < endIndex; i++)
+		{
+			legalMoves.Add(moves[i]);
+		}
+		
+		return legalMoves;
 	}
 
 	/// <summary>

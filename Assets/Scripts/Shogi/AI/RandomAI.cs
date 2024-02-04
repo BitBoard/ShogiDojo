@@ -6,7 +6,9 @@ public class RandomAI : IShogiAI
 	public Move GetMove(GameState gameState)
 	{
 		var moves = gameState.GetLegalMoves();
-		var randomIndex = Random.Range(0, moves.Length);
+		Debug.Log("合法手の数:" + moves.Count);
+		var randomIndex = Random.Range(0, moves.Count);
+		Debug.Log("ランダムなインデックス:" + randomIndex);
 		return moves[randomIndex];
 	}
 }

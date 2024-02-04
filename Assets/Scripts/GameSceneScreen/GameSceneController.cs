@@ -26,6 +26,7 @@ public class GameSceneController : MonoBehaviour
 		IShogiAI ai = new RandomAI();
 		gameState.ShowBoard();
 		var move = ai.GetMove(gameState);
+		Debug.Log("AIの指し手:" + move.Pretty());
 		gameState.Advance(move);
 		gameState.ShowBoard();
 	}
