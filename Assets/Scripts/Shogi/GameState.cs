@@ -53,6 +53,16 @@ public class GameState
 	}
 	
 	/// <summary>
+	/// ある手が合法手かどうかを判定する
+	/// </summary>
+	/// <param name="move"></param>
+	/// <returns></returns>
+	public bool IsValidMove(Move move)
+	{
+		return position.IsLegal(move);
+	}
+	
+	/// <summary>
 	/// 現局面の盤面情報を表示する
 	/// </summary>
 	public void ShowBoard()

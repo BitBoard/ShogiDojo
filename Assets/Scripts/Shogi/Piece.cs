@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using MyShogi.Model.Shogi.Core;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -8,6 +9,8 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public PieceType pieceType;
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
+    
+    public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
     
 
     public void OnPointerClick(PointerEventData eventData)

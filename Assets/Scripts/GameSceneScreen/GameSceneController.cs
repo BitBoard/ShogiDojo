@@ -13,6 +13,7 @@ public class GameSceneController : MonoBehaviour
     private Cell[,] cells;
     private Piece selectedPiece = null;
     private bool isPieceSelected = false;
+    private GameState gameState;
 	
 	private void Awake()
 	{
@@ -21,18 +22,7 @@ public class GameSceneController : MonoBehaviour
 	
 	private void Start()
 	{
-		var gameState = new GameState();
-		IShogiAI ai = new RandomAI();
-		gameState.ShowBoard();
-		var move = ai.GetMove(gameState);
-		Debug.Log("AIの指し手:" + move.Pretty());
-		gameState.Advance(move);
-		gameState.ShowBoard();
-		var from = Converter.PosToSquare(1, 1);
-		var to = Converter.PosToSquare(4, 1);
-		var move2 = Util.MakeMove(from, to);
-		Debug.Log("後手の指し手:" + move2.Pretty());
-		gameState.Advance(move2);
+		gameState = new GameState();
 		gameState.ShowBoard();
 	}
 
@@ -118,6 +108,21 @@ public class GameSceneController : MonoBehaviour
 		{
 			return;
 		}
+		
+		var from = selectedPiece.SqPos;
+		var to = cell.SqPos;
+		
+		// 合法手かどうかを判定する
+		var move = Util.MakeMove(from, to);
+		Debug.Log("指し手:" + move.Pretty());
+		if (!gameState.IsValidMove(move))
+		{
+			Debug.Log("不正な手です");
+			isPieceSelected = false;
+			selectedPiece = null;
+			return;
+		}
+		
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(cell.transform);
 		// 駒の位置を更新する
@@ -126,6 +131,10 @@ public class GameSceneController : MonoBehaviour
 
 		// 駒音を再生する
 		selectedPiece.GetComponent<AudioSource>().Play();
+		
+		// 局面を進める
+		gameState.Advance(move);
+		gameState.ShowBoard();
 
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		isPieceSelected = false;
