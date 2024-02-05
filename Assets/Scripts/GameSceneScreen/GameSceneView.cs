@@ -7,10 +7,15 @@ public class GameSceneView : MonoBehaviour
 	[SerializeField] private Button closeDebugMenuButton;
 	[SerializeField] private GameObject debugMenu;
     [SerializeField] private GameObject board;
+    [SerializeField] private GameObject blackCapturePieceArea;
+    [SerializeField] private GameObject whiteCapturePieceArea;
 
     public Button OpenDebugMenuButton => openDebugMenuButton;
 	public Button CloseDebugMenuButton => closeDebugMenuButton;
 	public GameObject DebugMenu => debugMenu;
 
 	public GameObject Board => board;
+	
+	public GameObject BlackCapturePieceArea => blackCapturePieceArea;
+	public GameObject WhiteCapturePieceArea => whiteCapturePieceArea;
 }

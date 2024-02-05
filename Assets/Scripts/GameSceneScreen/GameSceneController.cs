@@ -121,8 +121,8 @@ public class GameSceneController : MonoBehaviour
 		
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(piece.transform.parent);
-		// 移動先のマスの駒は非表示にする
-		piece.gameObject.SetActive(false);
+		// 移動先のマスの駒を取る
+		CapturePiece(piece, true);
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
 		selectedPiece.piecePotition = new PieceData.PiecePotition(piece.piecePotition.x, piece.piecePotition.y);
@@ -178,6 +178,17 @@ public class GameSceneController : MonoBehaviour
 		isPieceSelected = false;
 		selectedPiece = null;
 		
+	}
+
+	private void CapturePiece(Piece piece, bool isBlack)
+	{
+		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		var pieceType = piece.pieceType;
+		Debug.Log("取った駒:" + pieceType);
+		var capturePiece = Instantiate(piecePrefab, capturePieceArea.transform);
+		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
+		// 取った駒を消去する
+		Destroy(piece.gameObject);
 	}
 
 	public void OpenDebugMenu()
