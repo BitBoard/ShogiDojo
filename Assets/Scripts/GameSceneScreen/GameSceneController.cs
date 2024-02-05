@@ -14,6 +14,7 @@ public class GameSceneController : MonoBehaviour
     private Piece selectedPiece = null;
     private bool isPieceSelected = false;
     private GameState gameState;
+    private bool isBlackTurn = true;
 	
 	private void Awake()
 	{
@@ -122,7 +123,7 @@ public class GameSceneController : MonoBehaviour
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(piece.transform.parent);
 		// 移動先のマスの駒を取る
-		CapturePiece(piece, true);
+		CapturePiece(piece, isBlackTurn);
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
 		selectedPiece.piecePotition = new PieceData.PiecePotition(piece.piecePotition.x, piece.piecePotition.y);
@@ -138,6 +139,7 @@ public class GameSceneController : MonoBehaviour
 		
 		isPieceSelected = false;
 		selectedPiece = null;
+		isBlackTurn = !isBlackTurn;
 	}
 
 	private void MovePiece(Cell cell)
@@ -175,9 +177,10 @@ public class GameSceneController : MonoBehaviour
 		gameState.ShowBoard();
 
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
+		
 		isPieceSelected = false;
 		selectedPiece = null;
-		
+		isBlackTurn = !isBlackTurn;
 	}
 
 	private void CapturePiece(Piece piece, bool isBlack)
@@ -186,7 +189,8 @@ public class GameSceneController : MonoBehaviour
 		var pieceType = piece.pieceType;
 		Debug.Log("取った駒:" + pieceType);
 		var capturePiece = Instantiate(piecePrefab, capturePieceArea.transform);
-		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
+		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
+		capturePiece.GetComponent<Piece>().pieceType = pieceType;
 		// 取った駒を消去する
 		Destroy(piece.gameObject);
 	}
