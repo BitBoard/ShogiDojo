@@ -96,10 +96,48 @@ public class GameSceneController : MonoBehaviour
 	
 	private void SelectPiece(Piece piece)
 	{
-		// 駒を選択する
-		selectedPiece = piece;
-		isPieceSelected = true;
-		Debug.Log("選択した駒:" + piece.ToString());
+		if (selectedPiece == null)
+		{
+			// 駒を選択する
+			selectedPiece = piece;
+			isPieceSelected = true;
+			Debug.Log("選択した駒:" + piece.ToString());
+			return;
+		}
+		
+		var from = selectedPiece.SqPos;
+		var to = piece.SqPos;
+		
+		// 合法手かどうかを判定する
+		var move = Util.MakeMove(from, to);
+		Debug.Log("指し手:" + move.Pretty());
+		if (!gameState.IsValidMove(move))
+		{
+			Debug.Log("不正な手です");
+			isPieceSelected = false;
+			selectedPiece = null;
+			return;
+		}
+		
+		// 選択されている駒を移動させる
+		selectedPiece.transform.SetParent(piece.transform.parent);
+		// 移動先のマスの駒は非表示にする
+		piece.gameObject.SetActive(false);
+		// 駒の位置を更新する
+		selectedPiece.transform.localPosition = Vector3.zero;
+		selectedPiece.piecePotition = new PieceData.PiecePotition(piece.piecePotition.x, piece.piecePotition.y);
+		
+		// 駒音を再生する
+		selectedPiece.GetComponent<AudioSource>().Play();
+		
+		// 局面を進める
+		gameState.Advance(move);
+		gameState.ShowBoard();
+		
+		Debug.Log("移動した駒:" + selectedPiece.ToString());
+		
+		isPieceSelected = false;
+		selectedPiece = null;
 	}
 
 	private void MovePiece(Cell cell)
