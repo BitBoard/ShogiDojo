@@ -6,17 +6,19 @@ using UnityEngine.EventSystems;
 
 public class Piece : MonoBehaviour, IPointerClickHandler
 {
+    [SerializeField] private GameObject outline;
     public PieceType pieceType;
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
     
     public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
+    public GameObject Outline => outline;
     
 
     public void OnPointerClick(PointerEventData eventData)
     {
         Debug.Log(ToString());
-        OnClickAction.Invoke();
+        OnClickAction?.Invoke();
     }
 
     public override string ToString()
