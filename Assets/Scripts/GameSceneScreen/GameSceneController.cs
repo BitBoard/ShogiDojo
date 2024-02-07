@@ -30,7 +30,7 @@ public class GameSceneController : MonoBehaviour
 
 	private void Init()
 	{
-		SetEvent();
+        SetEvent();
         SetCells();
 		InitBoard();
 	}
@@ -79,8 +79,15 @@ public class GameSceneController : MonoBehaviour
     }
 
 	private void InitBoard(string boardJsonPath = "")
-	{
-		if (String.IsNullOrEmpty(boardJsonPath))
+    {
+        ClearPieces();
+        isPieceSelected = false;
+        selectedPiece = null;
+		isBlackTurn = true;
+        gameState = new GameState();
+        gameState.ShowBoard();
+
+        if (String.IsNullOrEmpty(boardJsonPath))
 		{
 			boardJsonPath = GameConfig.initialBoardJsonPath;
         }
@@ -100,6 +107,18 @@ public class GameSceneController : MonoBehaviour
 			};
         }
     }
+
+	private void ClearPieces()
+	{
+		foreach (var cell in cells)
+		{
+			var piece = cell.GetComponentInChildren<Piece>()?.gameObject;
+			if (piece != null)
+			{
+				Destroy(piece);
+			}
+		}
+	}
 	
 	private void SelectPiece(Piece piece)
 	{

@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -6,11 +7,19 @@ using UnityEngine.UI;
 public class ConfigPopupController : MonoBehaviour
 {
 
-    [SerializeField] private Dropdown chooseDropPiece;
+    [SerializeField] private TMP_Dropdown chooseDropPiece;
+    [SerializeField] private Button gameStartButton;
+    [SerializeField] private Button closeButton;
 
     public UnityAction<string> action;
 
-    public void StartGame()
+    private void Awake()
+    {
+        gameStartButton.onClick.AddListener(StartGame);
+        closeButton.onClick.AddListener(ClosePanel);
+    }
+
+    private void StartGame()
     {
         var dropPieceChoice = chooseDropPiece.value;
         string boardJsonPath;
@@ -24,5 +33,11 @@ public class ConfigPopupController : MonoBehaviour
                 boardJsonPath = GameConfig.initialBoardJsonPath; break;
         }
         action.Invoke(boardJsonPath);
+        ClosePanel();
+    }
+
+    private void ClosePanel()
+    {
+        this.gameObject.SetActive(false);
     }
 }

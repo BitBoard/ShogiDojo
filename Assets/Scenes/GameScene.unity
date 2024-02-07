@@ -2450,19 +2450,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 356708398}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1542393697}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &356708398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3965,19 +3953,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 694948309}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1542393697}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &694948309
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8330,7 +8306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   view: {fileID: 400231706}
   piecePrefab: {fileID: 7715699962658066538, guid: 758028ea4c45d456793263e318ae0b01, type: 3}
-  configPopupController: {fileID: 0}
+  configPopupController: {fileID: 1542393699}
 --- !u!1001 &1428600209
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9506,7 +9482,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1542393698
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9540,7 +9516,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d09425cd6ae6740aa4452c411c790b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chooseDropPiece: {fileID: 0}
+  chooseDropPiece: {fileID: 243043413}
+  gameStartButton: {fileID: 694948308}
+  closeButton: {fileID: 356708397}
 --- !u!1 &1559258711 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4078262637075654108, guid: 95f73675a70b510479b5a5ae2faed57e, type: 3}
