@@ -99,6 +99,12 @@ public class GameSceneController : MonoBehaviour
 	{
 		if (selectedPiece == null)
 		{
+			if (!piece.IsTurnPlayerPiece(isBlackTurn))
+			{
+				Debug.Log("自分の駒を選択してください");
+				
+				return;
+			}
 			// 駒を選択する
 			selectedPiece = piece;
 			selectedPiece.Outline.SetActive(true);

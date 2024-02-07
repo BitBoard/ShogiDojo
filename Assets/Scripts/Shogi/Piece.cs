@@ -20,6 +20,17 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         Debug.Log(ToString());
         OnClickAction?.Invoke();
     }
+    
+    public bool IsTurnPlayerPiece(bool isBlackTurn)
+    {
+        var pieceTypeNum = (int) pieceType;
+        if (isBlackTurn)
+        {
+            return pieceTypeNum >= 9;
+        }
+        
+        return pieceTypeNum < 9;
+    }
 
     public override string ToString()
     {
