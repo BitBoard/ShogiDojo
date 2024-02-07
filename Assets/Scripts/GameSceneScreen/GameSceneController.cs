@@ -99,8 +99,15 @@ public class GameSceneController : MonoBehaviour
 	{
 		if (selectedPiece == null)
 		{
+			if (!piece.IsTurnPlayerPiece(isBlackTurn))
+			{
+				Debug.Log("自分の駒を選択してください");
+				
+				return;
+			}
 			// 駒を選択する
 			selectedPiece = piece;
+			selectedPiece.Outline.SetActive(true);
 			isPieceSelected = true;
 			Debug.Log("選択した駒:" + piece.ToString());
 			return;
@@ -116,6 +123,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			Debug.Log("不正な手です");
 			isPieceSelected = false;
+			selectedPiece.Outline.SetActive(false);
 			selectedPiece = null;
 			return;
 		}
@@ -138,6 +146,7 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		
 		isPieceSelected = false;
+		selectedPiece.Outline.SetActive(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
 	}
@@ -159,6 +168,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			Debug.Log("不正な手です");
 			isPieceSelected = false;
+			selectedPiece.Outline.SetActive(false);
 			selectedPiece = null;
 			return;
 		}
@@ -179,6 +189,7 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		
 		isPieceSelected = false;
+		selectedPiece.Outline.SetActive(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
 	}
