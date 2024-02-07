@@ -7,6 +7,7 @@ public class GameSceneController : MonoBehaviour
 {
 	[SerializeField] private GameSceneView view;
 	[SerializeField] private GameObject piecePrefab;
+	[SerializeField] private ConfigPopupController configPopupController;
     private int boardSize = 81;
     private int boardColumns = 9;
     private int boardRows = 9;
@@ -29,7 +30,7 @@ public class GameSceneController : MonoBehaviour
 
 	private void Init()
 	{
-		SetEvent();
+        SetEvent();
         SetCells();
 		InitBoard();
 	}
@@ -38,6 +39,7 @@ public class GameSceneController : MonoBehaviour
 	{
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
+		configPopupController.action += InitBoard;
 	}
 
 	private void SetCells()
@@ -76,9 +78,20 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private void InitBoard()
-	{
-		var json = Resources.Load<TextAsset>("Data/initial-board").ToString();
+	private void InitBoard(string boardJsonPath = "")
+    {
+        ClearPieces();
+        isPieceSelected = false;
+        selectedPiece = null;
+		isBlackTurn = true;
+        gameState = new GameState();
+        gameState.ShowBoard();
+
+        if (String.IsNullOrEmpty(boardJsonPath))
+		{
+			boardJsonPath = GameConfig.initialBoardJsonPath;
+        }
+		var json = Resources.Load<TextAsset>(boardJsonPath).ToString();
         var boardData = JsonUtility.FromJson<BoardData>(json);
 
 		Debug.Log(boardData);
@@ -94,6 +107,18 @@ public class GameSceneController : MonoBehaviour
 			};
         }
     }
+
+	private void ClearPieces()
+	{
+		foreach (var cell in cells)
+		{
+			var piece = cell.GetComponentInChildren<Piece>()?.gameObject;
+			if (piece != null)
+			{
+				Destroy(piece);
+			}
+		}
+	}
 	
 	private void SelectPiece(Piece piece)
 	{
