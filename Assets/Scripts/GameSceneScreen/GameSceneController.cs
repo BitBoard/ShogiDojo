@@ -7,6 +7,7 @@ public class GameSceneController : MonoBehaviour
 {
 	[SerializeField] private GameSceneView view;
 	[SerializeField] private GameObject piecePrefab;
+	[SerializeField] private ConfigPopupController configPopupController;
     private int boardSize = 81;
     private int boardColumns = 9;
     private int boardRows = 9;
@@ -38,6 +39,7 @@ public class GameSceneController : MonoBehaviour
 	{
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
+		configPopupController.action += InitBoard;
 	}
 
 	private void SetCells()
@@ -76,9 +78,13 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private void InitBoard()
+	private void InitBoard(string boardJsonPath = "")
 	{
-		var json = Resources.Load<TextAsset>("Data/initial-board").ToString();
+		if (String.IsNullOrEmpty(boardJsonPath))
+		{
+			boardJsonPath = GameConfig.initialBoardJsonPath;
+        }
+		var json = Resources.Load<TextAsset>(boardJsonPath).ToString();
         var boardData = JsonUtility.FromJson<BoardData>(json);
 
 		Debug.Log(boardData);
