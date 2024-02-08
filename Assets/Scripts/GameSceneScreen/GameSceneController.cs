@@ -78,13 +78,13 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private void InitBoard(string boardJsonPath = "")
+	private void InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
     {
         ClearPieces();
         isPieceSelected = false;
         selectedPiece = null;
 		isBlackTurn = true;
-        gameState = new GameState();
+        gameState = new GameState(boardType);
         gameState.ShowBoard();
 
         if (String.IsNullOrEmpty(boardJsonPath))
