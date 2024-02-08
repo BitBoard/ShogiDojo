@@ -9,10 +9,10 @@ public class GameState
 {
 	private Position position;
 
-	public GameState()
+	public GameState(BoardType boardType = BoardType.NoHandicap)
 	{
 		position = new Position();
-		position.InitBoard();
+		position.InitBoard(boardType);
 	}
 	
 	/// <summary>
