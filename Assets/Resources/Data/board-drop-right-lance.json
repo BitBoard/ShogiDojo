@@ -1,6 +1,5 @@
 {
     "boardData" : [
-        {"y":0, "x":0, "pieceType":"white_lance"},
         {"y":0, "x":1, "pieceType":"white_knight"},
         {"y":0, "x":2, "pieceType":"white_silver"},
         {"y":0, "x":3, "pieceType":"white_gold"},
@@ -43,6 +42,7 @@
         {"y":8, "x":4, "pieceType":"black_king"},
         {"y":8, "x":5, "pieceType":"black_gold"},
         {"y":8, "x":6, "pieceType":"black_silver"},
-        {"y":8, "x":7, "pieceType":"black_knight"}
+        {"y":8, "x":7, "pieceType":"black_knight"},
+        {"y":8, "x":8, "pieceType":"black_lance"}
     ]
 }
