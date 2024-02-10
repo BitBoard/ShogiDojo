@@ -142,6 +142,36 @@ public class Converter
 		}
 	}
 
+	public static MSPiece PieceTypeToDropPiece(PieceType pieceType)
+	{
+		switch (pieceType)
+		{
+			case PieceType.BlackPawn:
+			case PieceType.WhitePawn:
+				return MSPiece.PAWN;
+			case PieceType.BlackLance:
+			case PieceType.WhiteLance:
+				return MSPiece.LANCE;
+			case PieceType.BlackKnight:
+			case PieceType.WhiteKnight:
+				return MSPiece.KNIGHT;
+			case PieceType.BlackSilver:
+			case PieceType.WhiteSilver:
+				return MSPiece.SILVER;
+			case PieceType.BlackGold:
+			case PieceType.WhiteGold:
+				return MSPiece.GOLD;
+			case PieceType.BlackBishop:
+			case PieceType.WhiteBishop:
+				return MSPiece.BISHOP;
+			case PieceType.BlackRook:
+			case PieceType.WhiteRook:
+				return MSPiece.ROOK;
+			default:
+				throw new Exception("Invalid piece type");
+		}
+	}
+
 	public static Square PosToSquare(int x, int y)
 	{
 		var file = (File)(8 - x);

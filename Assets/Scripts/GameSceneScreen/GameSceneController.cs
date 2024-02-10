@@ -196,7 +196,7 @@ public class GameSceneController : MonoBehaviour
 		Move move;
 		if (selectedPiece.IsCaptured())
 		{
-			var pt = Converter.PieceTypeToPiece(selectedPiece.pieceType, selectedPiece.isPromoted);
+			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
 			var to = cell.SqPos;
 			move = Util.MakeMoveDrop(pt, to);
 		}
