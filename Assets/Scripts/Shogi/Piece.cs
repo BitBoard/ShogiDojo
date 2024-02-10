@@ -10,6 +10,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public PieceType pieceType;
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
+    public bool isPromoted = false;
     
     public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
     public GameObject Outline => outline;
