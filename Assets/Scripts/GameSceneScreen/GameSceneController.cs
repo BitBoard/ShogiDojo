@@ -137,6 +137,16 @@ public class GameSceneController : MonoBehaviour
 			Debug.Log("選択した駒:" + piece.ToString());
 			return;
 		}
+
+		// 持ち駒を他の駒がある位置に置こうとした場合
+		if (selectedPiece.IsCaptured())
+		{
+			Debug.Log("不正な手です");
+			isPieceSelected = false;
+			selectedPiece.Outline.SetActive(false);
+			selectedPiece = null;
+			return;
+		}
 		
 		var from = selectedPiece.SqPos;
 		var to = piece.SqPos;
@@ -182,12 +192,22 @@ public class GameSceneController : MonoBehaviour
 		{
 			return;
 		}
-		
-		var from = selectedPiece.SqPos;
-		var to = cell.SqPos;
-		
+
+		Move move;
+		if (selectedPiece.IsCaptured())
+		{
+			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
+			var to = cell.SqPos;
+			move = Util.MakeMoveDrop(pt, to);
+		}
+		else
+		{
+			var from = selectedPiece.SqPos;
+			var to = cell.SqPos;
+			move = Util.MakeMove(from, to);
+		}
+
 		// 合法手かどうかを判定する
-		var move = Util.MakeMove(from, to);
 		Debug.Log("指し手:" + move.Pretty());
 		if (!gameState.IsValidMove(move))
 		{
@@ -226,7 +246,12 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("取った駒:" + pieceType);
 		var capturePiece = Instantiate(piecePrefab, capturePieceArea.transform);
 		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
-		capturePiece.GetComponent<Piece>().pieceType = pieceType;
+		capturePiece.GetComponent<Piece>().pieceType = PieceData.GetCapturePieceType(pieceType);
+		capturePiece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
+		capturePiece.GetComponent<Piece>().OnClickAction += () =>
+		{
+			SelectPiece(capturePiece.GetComponent<Piece>());
+		};
 		// 取った駒を消去する
 		Destroy(piece.gameObject);
 	}

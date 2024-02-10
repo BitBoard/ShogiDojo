@@ -1,4 +1,6 @@
+using System;
 using MyShogi.Model.Shogi.Core;
+using MSPiece = MyShogi.Model.Shogi.Core.Piece;
 
 public class Converter
 {
@@ -56,6 +58,117 @@ public class Converter
 				return "九";
 			default:
 				return "";
+		}
+	}
+	
+	/// <summary>
+	/// PieceTypeをMyShogiのPieceに変換する
+	/// </summary>
+	/// <param name="pieceType"></param>
+	/// <param name="isPromoted"></param>
+	/// <returns></returns>
+	/// <exception cref="Exception"></exception>
+	public static MSPiece PieceTypeToPiece(PieceType pieceType, bool isPromoted)
+	{
+		if (isPromoted)
+		{
+			switch (pieceType)
+			{
+				case PieceType.BlackPawn:
+					return MSPiece.B_PRO_PAWN;
+				case PieceType.BlackLance:
+					return MSPiece.B_PRO_LANCE;
+				case PieceType.BlackKnight:
+					return MSPiece.B_PRO_KNIGHT;
+				case PieceType.BlackSilver:
+					return MSPiece.B_PRO_SILVER;
+				case PieceType.BlackRook:
+					return MSPiece.B_DRAGON;
+				case PieceType.BlackBishop:
+					return MSPiece.B_HORSE;
+				case PieceType.WhitePawn:
+					return MSPiece.W_PRO_PAWN;
+				case PieceType.WhiteLance:
+					return MSPiece.W_PRO_LANCE;
+				case PieceType.WhiteKnight:
+					return MSPiece.W_PRO_KNIGHT;
+				case PieceType.WhiteSilver:
+					return MSPiece.W_PRO_SILVER;
+				case PieceType.WhiteRook:
+					return MSPiece.W_DRAGON;
+				case PieceType.WhiteBishop:
+					return MSPiece.W_HORSE;
+				default:
+					throw new Exception("Invalid piece type");
+			}
+		}
+		
+		switch (pieceType)
+		{
+			case PieceType.BlackPawn:
+				return MSPiece.B_PAWN;
+			case PieceType.BlackLance:
+				return MSPiece.B_LANCE;
+			case PieceType.BlackKnight:
+				return MSPiece.B_KNIGHT;
+			case PieceType.BlackSilver:
+				return MSPiece.B_SILVER;
+			case PieceType.BlackGold:
+				return MSPiece.B_GOLD;
+			case PieceType.BlackRook:
+				return MSPiece.B_ROOK;
+			case PieceType.BlackBishop:
+				return MSPiece.B_BISHOP;
+			case PieceType.BlackKing:
+				return MSPiece.B_KING;
+			case PieceType.WhitePawn:
+				return MSPiece.W_PAWN;
+			case PieceType.WhiteLance:
+				return MSPiece.W_LANCE;
+			case PieceType.WhiteKnight:
+				return MSPiece.W_KNIGHT;
+			case PieceType.WhiteSilver:
+				return MSPiece.W_SILVER;
+			case PieceType.WhiteGold:
+				return MSPiece.W_GOLD;
+			case PieceType.WhiteRook:
+				return MSPiece.W_ROOK;
+			case PieceType.WhiteBishop:
+				return MSPiece.W_BISHOP;
+			case PieceType.WhiteKing:
+				return MSPiece.W_KING;
+			default:
+				throw new Exception("Invalid piece type");
+		}
+	}
+
+	public static MSPiece PieceTypeToDropPiece(PieceType pieceType)
+	{
+		switch (pieceType)
+		{
+			case PieceType.BlackPawn:
+			case PieceType.WhitePawn:
+				return MSPiece.PAWN;
+			case PieceType.BlackLance:
+			case PieceType.WhiteLance:
+				return MSPiece.LANCE;
+			case PieceType.BlackKnight:
+			case PieceType.WhiteKnight:
+				return MSPiece.KNIGHT;
+			case PieceType.BlackSilver:
+			case PieceType.WhiteSilver:
+				return MSPiece.SILVER;
+			case PieceType.BlackGold:
+			case PieceType.WhiteGold:
+				return MSPiece.GOLD;
+			case PieceType.BlackBishop:
+			case PieceType.WhiteBishop:
+				return MSPiece.BISHOP;
+			case PieceType.BlackRook:
+			case PieceType.WhiteRook:
+				return MSPiece.ROOK;
+			default:
+				throw new Exception("Invalid piece type");
 		}
 	}
 

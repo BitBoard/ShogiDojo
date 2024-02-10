@@ -10,6 +10,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public PieceType pieceType;
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
+    public bool isPromoted = false;
     
     public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
     public GameObject Outline => outline;
@@ -30,6 +31,11 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         }
         
         return pieceTypeNum < 9;
+    }
+
+    public bool IsCaptured()
+    {
+        return piecePotition.x == -1 && piecePotition.y == -1;
     }
 
     public override string ToString()
