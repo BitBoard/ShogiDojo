@@ -32,6 +32,11 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         return pieceTypeNum < 9;
     }
 
+    public bool IsCaptured()
+    {
+        return piecePotition.x == -1 && piecePotition.y == -1;
+    }
+
     public override string ToString()
     {
         return Converter.PosToSign(this.piecePotition.x, this.piecePotition.y) + " " + this.pieceType.ToString() +

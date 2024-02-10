@@ -226,7 +226,12 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("取った駒:" + pieceType);
 		var capturePiece = Instantiate(piecePrefab, capturePieceArea.transform);
 		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
-		capturePiece.GetComponent<Piece>().pieceType = pieceType;
+		capturePiece.GetComponent<Piece>().pieceType = PieceData.GetCapturePieceType(pieceType);
+		capturePiece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
+		capturePiece.GetComponent<Piece>().OnClickAction += () =>
+		{
+			SelectPiece(capturePiece.GetComponent<Piece>());
+		};
 		// 取った駒を消去する
 		Destroy(piece.gameObject);
 	}
