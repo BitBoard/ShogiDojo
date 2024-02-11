@@ -2,6 +2,7 @@ using System;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class GameSceneController : MonoBehaviour
 {
@@ -16,8 +17,9 @@ public class GameSceneController : MonoBehaviour
     private bool isPieceSelected = false;
     private GameState gameState;
     private bool isBlackTurn = true;
-	
-	private void Awake()
+	private CapturePieceAreaData capturePieceAreaData;
+
+    private void Awake()
 	{
 		Init();
 	}
@@ -81,6 +83,7 @@ public class GameSceneController : MonoBehaviour
 	private void InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
     {
         ClearPieces();
+        capturePieceAreaData = new CapturePieceAreaData();
         isPieceSelected = false;
         selectedPiece = null;
 		isBlackTurn = true;
@@ -244,16 +247,40 @@ public class GameSceneController : MonoBehaviour
 		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
 		var pieceType = piece.pieceType;
 		Debug.Log("取った駒:" + pieceType);
-		var capturePiece = Instantiate(piecePrefab, capturePieceArea.transform);
-		capturePiece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
-		capturePiece.GetComponent<Piece>().pieceType = PieceData.GetCapturePieceType(pieceType);
-		capturePiece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-		capturePiece.GetComponent<Piece>().OnClickAction += () =>
-		{
-			SelectPiece(capturePiece.GetComponent<Piece>());
+
+		capturePieceAreaData.UpdateCapturePieceData(pieceType, isBlack);
+        foreach (Transform child in capturePieceArea.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+		foreach (PieceType pt in PieceData.getPieceTypeList(isBlack)) {
+			for (var pieceNum = 0; pieceNum < capturePieceAreaData.getPieceNum(pt, isBlack); pieceNum++)
+			{
+				if(pt == pieceType)
+				{
+                    var capturePieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
+                    capturePieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
+                    capturePieceByPrefab.GetComponent<Piece>().pieceType = PieceData.GetCapturePieceType(pieceType);
+                    capturePieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
+                    capturePieceByPrefab.GetComponent<Piece>().OnClickAction += () =>
+                    {
+                        SelectPiece(capturePieceByPrefab.GetComponent<Piece>());
+                    };
+                } else
+				{
+					var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
+                    pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pt));
+                    pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
+                    pieceByPrefab.GetComponent<Piece>().pieceType = pt;
+                }
+			}
 		};
-		// 取った駒を消去する
-		Destroy(piece.gameObject);
+		Debug.Log("=================================");
+        Debug.Log(capturePieceAreaData);
+
+        // 取った駒を消去する
+        Destroy(piece.gameObject);
 	}
 
 	public void OpenDebugMenu()
