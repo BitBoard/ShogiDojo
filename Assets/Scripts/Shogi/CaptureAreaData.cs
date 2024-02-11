@@ -17,7 +17,8 @@ public interface ICapturePieceNum
     int king { get; set; }
 }
 
-public class CapturePieceAreaData
+// 先手後手の持ち駒に関する情報を管理するクラス
+public class CapturePieceAreaData 
 {
     public ICapturePieceNum blackCapturePiece;
     public ICapturePieceNum whiteCapturePiece;
@@ -89,44 +90,45 @@ public class CapturePieceAreaData
                 return 0;
         }
     }
-
-    public void UpdateCapturePieceData(PieceType pieceType, bool isBlack)
+    
+    public void UpdateCapturePieceData(PieceType pieceType, bool isBlack, bool isCaptured = false)
     {
         ICapturePieceNum capturePiece = isBlack ? blackCapturePiece : whiteCapturePiece;
 
+        // 持ち駒を消費した場合と取得し場合で更新式を分岐
         switch (pieceType)
         {
             case PieceType.BlackPawn:
             case PieceType.WhitePawn:
-                capturePiece.pawn++;
+                capturePiece.pawn += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackLance:
             case PieceType.WhiteLance:
-                capturePiece.lance++;
+                capturePiece.lance += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackKnight:
             case PieceType.WhiteKnight:
-                capturePiece.knight++;
+                capturePiece.knight += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackSilver:
             case PieceType.WhiteSilver:
-                capturePiece.silver++;
+                capturePiece.silver += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackGold:
             case PieceType.WhiteGold:
-                capturePiece.gold++;
+                capturePiece.gold += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackBishop:
             case PieceType.WhiteBishop:
-                capturePiece.bishop++;
+                capturePiece.bishop += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackRook:
             case PieceType.WhiteRook:
-                capturePiece.rook++;
+                capturePiece.rook += isCaptured ? -1 : 1;
                 break;
             case PieceType.BlackKing:
             case PieceType.WhiteKing:
-                capturePiece.king++;
+                capturePiece.king += isCaptured ? -1 : 1;
                 break;
             default:
                 Debug.LogError("Unknown pieceType: " + pieceType);

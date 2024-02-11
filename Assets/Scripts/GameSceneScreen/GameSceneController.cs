@@ -66,7 +66,7 @@ public class GameSceneController : MonoBehaviour
 			{
 				if (selectedPiece != null)
 				{
-					MovePiece(cell);
+					MovePiece(cell, isBlackTurn);
 				}
 			};
 			if((i+1) % boardColumns == 0)
@@ -189,7 +189,7 @@ public class GameSceneController : MonoBehaviour
 		isBlackTurn = !isBlackTurn;
 	}
 
-	private void MovePiece(Cell cell)
+	private void MovePiece(Cell cell, bool isBlack)
 	{
 		if (!isPieceSelected)
 		{
@@ -223,6 +223,13 @@ public class GameSceneController : MonoBehaviour
 		
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(cell.transform);
+
+		// 持ち駒が消費されていた場合は持ち駒情報を更新する
+		if(selectedPiece.IsCaptured()) {
+			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.pieceType, isBlack, selectedPiece.IsCaptured());
+            Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
+        };
+
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
 		selectedPiece.piecePotition = new PieceData.PiecePotition(cell.x, cell.y);
@@ -249,35 +256,29 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("取った駒:" + pieceType);
 
 		capturePieceAreaData.UpdateCapturePieceData(pieceType, isBlack);
+        Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
+
+        // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
         foreach (Transform child in capturePieceArea.transform)
         {
             Destroy(child.gameObject);
         }
 
-		foreach (PieceType pt in PieceData.getPieceTypeList(isBlack)) {
+        // capturePieceAreaDataの情報を元に持ち駒の表示を更新
+        foreach (PieceType pt in PieceData.getPieceTypeList(isBlack)) {
 			for (var pieceNum = 0; pieceNum < capturePieceAreaData.getPieceNum(pt, isBlack); pieceNum++)
 			{
-				if(pt == pieceType)
-				{
-                    var capturePieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-                    capturePieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pieceType));
-                    capturePieceByPrefab.GetComponent<Piece>().pieceType = PieceData.GetCapturePieceType(pieceType);
-                    capturePieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-                    capturePieceByPrefab.GetComponent<Piece>().OnClickAction += () =>
-                    {
-                        SelectPiece(capturePieceByPrefab.GetComponent<Piece>());
-                    };
-                } else
-				{
-					var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-                    pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.CapturePieceTypeToStr(pt));
-                    pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-                    pieceByPrefab.GetComponent<Piece>().pieceType = pt;
-                }
+				var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
+                pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt));
+                pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
+                pieceByPrefab.GetComponent<Piece>().pieceType = pt;
+                pieceByPrefab.GetComponent<Piece>().OnClickAction += () =>
+                {
+                    SelectPiece(pieceByPrefab.GetComponent<Piece>());
+                };
+                
 			}
 		};
-		Debug.Log("=================================");
-        Debug.Log(capturePieceAreaData);
 
         // 取った駒を消去する
         Destroy(piece.gameObject);
