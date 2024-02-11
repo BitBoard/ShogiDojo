@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +17,7 @@ public interface ICapturePieceNum
     int king { get; set; }
 }
 
-// æèŒãè‚Ì‚¿‹î‚ÉŠÖ‚·‚éî•ñ‚ğŠÇ—‚·‚éƒNƒ‰ƒX
+// å…ˆæ‰‹å¾Œæ‰‹ã®æŒã¡é§’ã«é–¢ã™ã‚‹æƒ…å ±ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹
 public class CapturePieceAreaData 
 {
     public ICapturePieceNum blackCapturePiece;
@@ -52,7 +52,7 @@ public class CapturePieceAreaData
     {
         blackCapturePiece = CreateEmptyCapturePiece();
         whiteCapturePiece = CreateEmptyCapturePiece();
-        Debug.Log("‚¿‹îî•ñ‚Ì‰Šú‰»‚ªŠ®—¹");
+        Debug.Log("æŒã¡é§’æƒ…å ±ã®åˆæœŸåŒ–ãŒå®Œäº†");
     }
 
     public int getPieceNum(PieceType pieceType, bool isBlack)
@@ -95,7 +95,7 @@ public class CapturePieceAreaData
     {
         ICapturePieceNum capturePiece = isBlack ? blackCapturePiece : whiteCapturePiece;
 
-        // ‚¿‹î‚ğÁ”ï‚µ‚½ê‡‚Ææ“¾‚µê‡‚ÅXV®‚ğ•ªŠò
+        // æŒã¡é§’ã‚’æ¶ˆè²»ã—ãŸå ´åˆã¨å–å¾—ã—å ´åˆã§æ›´æ–°å¼ã‚’åˆ†å²
         switch (pieceType)
         {
             case PieceType.BlackPawn:
