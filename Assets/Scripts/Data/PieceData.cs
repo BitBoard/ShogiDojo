@@ -152,4 +152,31 @@ public partial class PieceData {
     {
         return PieceTypeToStr(GetCapturePieceType(pieceType));
     }
+
+    public static PieceType[] getPieceTypeList(bool isBlack)
+    {
+        return isBlack ?
+            new PieceType[]
+            {
+                PieceType.BlackPawn,
+                PieceType.BlackLance,
+                PieceType.BlackKnight,
+                PieceType.BlackSilver,
+                PieceType.BlackGold,
+                PieceType.BlackBishop,
+                PieceType.BlackRook,
+                PieceType.BlackKing
+            } :
+            new PieceType[]
+            {
+                PieceType.WhitePawn,
+                PieceType.WhiteLance,
+                PieceType.WhiteKnight,
+                PieceType.WhiteSilver,
+                PieceType.WhiteGold,
+                PieceType.WhiteBishop,
+                PieceType.WhiteRook,
+                PieceType.WhiteKing
+            };
+    }
 }
