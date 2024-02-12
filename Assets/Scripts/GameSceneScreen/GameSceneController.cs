@@ -1,8 +1,8 @@
 using System;
+using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Text.RegularExpressions;
 
 public class GameSceneController : MonoBehaviour
 {
@@ -17,6 +17,8 @@ public class GameSceneController : MonoBehaviour
     private bool isPieceSelected = false;
     private GameState gameState;
     private bool isBlackTurn = true;
+    private bool shouldPromote = false;
+    private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
 
     private void Awake()
@@ -42,6 +44,18 @@ public class GameSceneController : MonoBehaviour
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
 		configPopupController.action += InitBoard;
+		view.PromotePopupView.PromoteButton.onClick.AddListener(() =>
+		{
+			shouldPromote = true;
+			view.PromotePopupView.gameObject.SetActive(false);
+			promoteSelectionDone = true;
+		});
+		view.PromotePopupView.CancelPromoteButton.onClick.AddListener(() =>
+		{
+			shouldPromote = false;
+			view.PromotePopupView.gameObject.SetActive(false);
+			promoteSelectionDone = true;
+		});
 	}
 
 	private void SetCells()
@@ -62,14 +76,15 @@ public class GameSceneController : MonoBehaviour
             cells[y, x].x = x;
             cells[y, x].y = y;
             var cell = cells[y, x];
-            cell.OnClickAction += () =>
-			{
-				if (selectedPiece != null)
-				{
-					MovePiece(cell, isBlackTurn);
-				}
-			};
-			if((i+1) % boardColumns == 0)
+            cell.OnClickAction += UniTask.UnityAction(async () =>
+            {
+	            if (selectedPiece != null)
+	            {
+		            await MovePiece(cell, isBlackTurn);
+	            }
+            });
+
+            if((i+1) % boardColumns == 0)
             {
                 y++;
 				x = 0;
@@ -104,11 +119,12 @@ public class GameSceneController : MonoBehaviour
             piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
             piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
 			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
-			piece.GetComponent<Piece>().OnClickAction += () =>
+			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
 			{
-				SelectPiece(piece.GetComponent<Piece>());
-			};
-        }
+				await SelectPiece(piece.GetComponent<Piece>());
+			});
+			
+	    }
     }
 
 	private void ClearPieces()
@@ -123,8 +139,14 @@ public class GameSceneController : MonoBehaviour
 		}
 	}
 	
-	private void SelectPiece(Piece piece)
+	/// <summary>
+	/// 駒を選択する処理
+	/// note: 相手の駒を取る時はこちらの処理が呼ばれる
+	/// </summary>
+	/// <param name="piece"></param>
+	private async UniTask SelectPiece(Piece piece)
 	{
+		// そもそも駒が選択されていない場合
 		if (selectedPiece == null)
 		{
 			if (!piece.IsTurnPlayerPiece(isBlackTurn))
@@ -156,16 +178,48 @@ public class GameSceneController : MonoBehaviour
 		
 		// 合法手かどうかを判定する
 		var move = Util.MakeMove(from, to);
+		var movePromote = Util.MakeMovePromote(from, to);
+		var decidedMove = move;
+		
 		Debug.Log("指し手:" + move.Pretty());
 		if (!gameState.IsValidMove(move))
 		{
-			Debug.Log("不正な手です");
-			isPieceSelected = false;
-			selectedPiece.Outline.SetActive(false);
-			selectedPiece = null;
-			return;
+			// 成りが合法手の場合
+			if (gameState.IsValidMove(movePromote))
+			{
+				// この場合は強制的に成る
+				decidedMove = movePromote;
+				PromotePiece(selectedPiece);
+			}
+			else
+			{
+				Debug.Log("不正な手です");
+				isPieceSelected = false;
+				selectedPiece.Outline.SetActive(false);
+				selectedPiece = null;
+				return;
+			}
+		}
+
+		// 成りも不成も選択できる場合
+		if (gameState.IsValidMove(move) && gameState.IsValidMove(movePromote))
+		{
+			// 成るかどうかを選択する
+			view.PromotePopupView.gameObject.SetActive(true);
+			shouldPromote = false;
+			promoteSelectionDone = false;
+			
+			// ここで待機する
+			await UniTask.WaitUntil(() => promoteSelectionDone);
+			
+			if (shouldPromote)
+			{
+				decidedMove = movePromote;
+				PromotePiece(selectedPiece);
+			}
 		}
 		
+
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(piece.transform.parent);
 		// 移動先のマスの駒を取る
@@ -178,7 +232,7 @@ public class GameSceneController : MonoBehaviour
 		selectedPiece.GetComponent<AudioSource>().Play();
 		
 		// 局面を進める
-		gameState.Advance(move);
+		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
 		
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
@@ -189,36 +243,77 @@ public class GameSceneController : MonoBehaviour
 		isBlackTurn = !isBlackTurn;
 	}
 
-	private void MovePiece(Cell cell, bool isBlack)
+	/// <summary>
+	/// 駒を動かす処理
+	/// note: 持ち駒を動かす場合は必ずこちらの処理が呼ばれる
+	/// </summary>
+	/// <param name="cell"></param>
+	/// <param name="isBlack"></param>
+	private async UniTask MovePiece(Cell cell, bool isBlack)
 	{
 		if (!isPieceSelected)
 		{
 			return;
 		}
 
-		Move move;
+		Move move = Move.NONE;
+		Move movePromote = Move.NONE;
+		Move decidedMove = Move.NONE;
+		// 持ち駒を打つ場合
 		if (selectedPiece.IsCaptured())
 		{
 			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
 			var to = cell.SqPos;
 			move = Util.MakeMoveDrop(pt, to);
+			decidedMove = move;
 		}
 		else
 		{
+			// 盤上の駒を移動する場合
 			var from = selectedPiece.SqPos;
 			var to = cell.SqPos;
 			move = Util.MakeMove(from, to);
+			movePromote = Util.MakeMovePromote(from, to);
+			decidedMove = move;
 		}
 
 		// 合法手かどうかを判定する
 		Debug.Log("指し手:" + move.Pretty());
 		if (!gameState.IsValidMove(move))
 		{
-			Debug.Log("不正な手です");
-			isPieceSelected = false;
-			selectedPiece.Outline.SetActive(false);
-			selectedPiece = null;
-			return;
+			// 成りが合法手の場合
+			if (gameState.IsValidMove(movePromote))
+			{
+				// この場合は強制的に成る
+				decidedMove = movePromote;
+				PromotePiece(selectedPiece);
+			}
+			else
+			{
+				Debug.Log("不正な手です");
+				isPieceSelected = false;
+				selectedPiece.Outline.SetActive(false);
+				selectedPiece = null;
+				return;
+			}
+		}
+		
+		// 成りも不成も選択できる場合
+		if (gameState.IsValidMove(move) && gameState.IsValidMove(movePromote))
+		{
+			// 成るかどうかを選択する
+			view.PromotePopupView.gameObject.SetActive(true);
+			shouldPromote = false;
+			promoteSelectionDone = false;
+			
+			// ここで待機する
+			await UniTask.WaitUntil(() => promoteSelectionDone);
+			
+			if (shouldPromote)
+			{
+				decidedMove = movePromote;
+				PromotePiece(selectedPiece);
+			}
 		}
 		
 		// 選択されている駒を移動させる
@@ -238,7 +333,7 @@ public class GameSceneController : MonoBehaviour
 		selectedPiece.GetComponent<AudioSource>().Play();
 		
 		// 局面を進める
-		gameState.Advance(move);
+		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
 
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
@@ -249,6 +344,11 @@ public class GameSceneController : MonoBehaviour
 		isBlackTurn = !isBlackTurn;
 	}
 
+	/// <summary>
+	/// 駒を取る処理
+	/// </summary>
+	/// <param name="piece"></param>
+	/// <param name="isBlack"></param>
 	private void CapturePiece(Piece piece, bool isBlack)
 	{
 		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
@@ -272,16 +372,21 @@ public class GameSceneController : MonoBehaviour
                 pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt));
                 pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
                 pieceByPrefab.GetComponent<Piece>().pieceType = pt;
-                pieceByPrefab.GetComponent<Piece>().OnClickAction += () =>
+                pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
                 {
-                    SelectPiece(pieceByPrefab.GetComponent<Piece>());
-                };
-                
+	                await SelectPiece(pieceByPrefab.GetComponent<Piece>());
+                });
 			}
 		};
 
         // 取った駒を消去する
         Destroy(piece.gameObject);
+	}
+	
+	private void PromotePiece(Piece piece)
+	{
+		piece.isPromoted = true;
+		piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType));
 	}
 
 	public void OpenDebugMenu()

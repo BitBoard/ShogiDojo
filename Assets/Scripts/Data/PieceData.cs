@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -99,6 +100,45 @@ public partial class PieceData {
                 return "none";
         }
     }
+
+    /// <summary>
+    /// 成駒の文字列を取得する
+    /// </summary>
+    /// <param name="pieceType"></param>
+    /// <returns></returns>
+    public static string PieceTypeToPromoteStr(PieceType pieceType)
+    {
+        switch (pieceType)
+        {
+            case PieceType.WhitePawn:
+                return "white_prom_pawn";
+            case PieceType.WhiteLance:
+                return "white_prom_lance";
+            case PieceType.WhiteKnight:
+                return "white_prom_knight";
+            case PieceType.WhiteSilver:
+                return "white_prom_silver";
+            case PieceType.WhiteBishop:
+                return "white_horse";
+            case PieceType.WhiteRook:
+                return "white_dragon";
+            case PieceType.BlackPawn:
+                return "black_prom_pawn";
+            case PieceType.BlackLance:
+                return "black_prom_lance";
+            case PieceType.BlackKnight:
+                return "black_prom_knight";
+            case PieceType.BlackSilver:
+                return "black_prom_silver";
+            case PieceType.BlackBishop:
+                return "black_horse";
+            case PieceType.BlackRook:
+                return "black_dragon";
+            default:
+                throw new Exception("成れない駒です。");
+        }
+    }
+        
     
     public static PieceType GetCapturePieceType(PieceType pieceType)
     {

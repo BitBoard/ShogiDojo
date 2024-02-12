@@ -9,6 +9,7 @@ public class GameSceneView : MonoBehaviour
     [SerializeField] private GameObject board;
     [SerializeField] private GameObject blackCapturePieceArea;
     [SerializeField] private GameObject whiteCapturePieceArea;
+    [SerializeField] private PromotePopupView promotePopupView;
 
     public Button OpenDebugMenuButton => openDebugMenuButton;
 	public Button CloseDebugMenuButton => closeDebugMenuButton;
@@ -18,4 +19,6 @@ public class GameSceneView : MonoBehaviour
 	
 	public GameObject BlackCapturePieceArea => blackCapturePieceArea;
 	public GameObject WhiteCapturePieceArea => whiteCapturePieceArea;
+	
+	public PromotePopupView PromotePopupView => promotePopupView;
 }
