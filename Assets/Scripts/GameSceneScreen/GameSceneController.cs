@@ -103,7 +103,7 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isBlackTurn = true)
+	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isAIFirst = false)
     {
         ClearPieces();
         capturePieceAreaData = new CapturePieceAreaData();
@@ -112,7 +112,8 @@ public class GameSceneController : MonoBehaviour
         gameState = new GameState(boardType);
         gameState.ShowBoard();
         battleAI = new RandomAI();
-        this.isBlackTurn = isBlackTurn;
+        this.isBlackTurn = true;
+		this.isAIFirst = isAIFirst;
 
         if (String.IsNullOrEmpty(boardJsonPath))
 		{
@@ -127,7 +128,16 @@ public class GameSceneController : MonoBehaviour
             var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
             piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
             piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
-			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
+			if(isAIFirst)
+			{
+				// AIが先手の場合、blackpieceとwhitepieceの配置を逆にする
+                piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(8 - data.x, 8 - data.y);
+			}
+			else
+			{
+                piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
+            }
+			
 			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
 			{
 				if (!IsPlayerTurn())
@@ -139,7 +149,7 @@ public class GameSceneController : MonoBehaviour
 			
 	    }
 
-		if (!isBlackTurn)
+		if (isAIFirst)
 		{
 			await GetAIAction();
 		}
@@ -191,8 +201,8 @@ public class GameSceneController : MonoBehaviour
 			return;
 		}
 		
-		var from = selectedPiece.SqPos;
-		var to = piece.SqPos;
+		var from = selectedPiece.SqPos(isAIFirst);
+		var to = piece.SqPos(isAIFirst);
 		
 		// 合法手かどうかを判定する
 		var move = Util.MakeMove(from, to);
@@ -287,15 +297,15 @@ public class GameSceneController : MonoBehaviour
 		if (selectedPiece.IsCaptured())
 		{
 			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
-			var to = cell.SqPos;
+			var to = cell.SqPos(isAIFirst);
 			move = Util.MakeMoveDrop(pt, to);
 			decidedMove = move;
 		}
 		else
 		{
 			// 盤上の駒を移動する場合
-			var from = selectedPiece.SqPos;
-			var to = cell.SqPos;
+			var from = selectedPiece.SqPos(isAIFirst);
+			var to = cell.SqPos(isAIFirst);
 			move = Util.MakeMove(from, to);
 			movePromote = Util.MakeMovePromote(from, to);
 			decidedMove = move;
@@ -451,6 +461,7 @@ public class GameSceneController : MonoBehaviour
 	
 	private bool IsPlayerTurn()
 	{
+		// 「先手のターンかつAIが後手」「後手のターンかつAIが先手」の場合、プレイヤーは手番を持っている
 		return isBlackTurn != isAIFirst;
 	}
 
@@ -468,8 +479,19 @@ public class GameSceneController : MonoBehaviour
 		var to = move.To();
 		var toX = Converter.SquareToX(to);
 		var toY = Converter.SquareToY(to);
+
 		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
 		isPieceSelected = true;
+
+		/*
+		if(isAIFirst)
+		{
+			fromX = 8 - fromX;
+			fromY = 8 - fromY;
+			toX = 8 - toX;
+			toY = 8 - toY;
+		}
+		*/
 
 		// 駒を打つ場合
 		if (move.IsDrop())

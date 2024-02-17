@@ -15,7 +15,7 @@ public class ConfigPopupController : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button firstPlayerButton;
     [SerializeField] private Button secondPlayerButton;
-    private bool isBlackTurn = true;
+    private bool isAIFirst = false;
 
     public UnityAction<string, BoardType, bool> action;
 
@@ -96,7 +96,7 @@ public class ConfigPopupController : MonoBehaviour
                 boardType = BoardType.NoHandicap;
                 break;
         }
-        action.Invoke(boardJsonPath, boardType, isBlackTurn);
+        action.Invoke(boardJsonPath, boardType, isAIFirst);
         ClosePanel();
     }
 
@@ -108,7 +108,7 @@ public class ConfigPopupController : MonoBehaviour
 
     private void ChooseFirstPlayer()
     {
-        isBlackTurn = true;
+        isAIFirst = false;
         firstPlayerButton.image.color = new Color32(101, 173, 211, 255);
         secondPlayerButton.image.color = new Color32(255, 255, 255, 255);
         firstPlayer.text = "▲先手";
@@ -117,7 +117,7 @@ public class ConfigPopupController : MonoBehaviour
 
     private void ChooseSecondPlayer()
     {
-        isBlackTurn = false;
+        isAIFirst = true;
         firstPlayerButton.image.color = new Color32(255, 255, 255, 255);
         secondPlayerButton.image.color = new Color32(101, 173, 211, 255);
         firstPlayer.text = "△後手";
@@ -141,7 +141,7 @@ public class ConfigPopupController : MonoBehaviour
             secondPlayerButton.gameObject.SetActive(false);
             firstPlayer.text = "△後手";
             secondPlayer.text = "▲先手";
-            isBlackTurn = true;
+            isAIFirst = true;
         }
     }
 }

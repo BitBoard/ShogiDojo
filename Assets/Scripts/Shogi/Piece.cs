@@ -12,9 +12,12 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public UnityAction OnClickAction;
     public bool isPromoted = false;
     
-    public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
     public GameObject Outline => outline;
-    
+
+    public Square SqPos(bool isAIFirst)
+    {
+        return Converter.PosToSquare(piecePotition.x, piecePotition.y, isAIFirst);
+    }
 
     public void OnPointerClick(PointerEventData eventData)
     {
