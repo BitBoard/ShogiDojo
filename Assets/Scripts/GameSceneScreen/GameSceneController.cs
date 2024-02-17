@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameSceneController : MonoBehaviour
@@ -28,25 +29,25 @@ public class GameSceneController : MonoBehaviour
 		Init();
 	}
 	
-	private void Start()
-	{
-		gameState = new GameState();
-		gameState.ShowBoard();
-		battleAI = new RandomAI();
+	private async void Start()
+    {
+       await InitBoard();
 	}
 
 	private void Init()
 	{
         SetEvent();
         SetCells();
-		InitBoard();
 	}
 	
 	private void SetEvent()
 	{
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
-		configPopupController.action += InitBoard;
+		configPopupController.action += new UnityAction<string, BoardType, bool>((boardJsonPath, boardType, isBlackTurn) =>
+        {
+            UniTask.Void(async () => await InitBoard(boardJsonPath, boardType, isBlackTurn));
+        });
 		view.PromotePopupView.PromoteButton.onClick.AddListener(() =>
 		{
 			shouldPromote = true;
@@ -102,15 +103,16 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private void InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
+	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isBlackTurn = true)
     {
         ClearPieces();
         capturePieceAreaData = new CapturePieceAreaData();
         isPieceSelected = false;
         selectedPiece = null;
-		isBlackTurn = true;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
+        battleAI = new RandomAI();
+        this.isBlackTurn = isBlackTurn;
 
         if (String.IsNullOrEmpty(boardJsonPath))
 		{
@@ -136,6 +138,11 @@ public class GameSceneController : MonoBehaviour
 			});
 			
 	    }
+
+		if (!isBlackTurn)
+		{
+			await GetAIAction();
+		}
     }
 
 	private void ClearPieces()

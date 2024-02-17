@@ -7,17 +7,25 @@ using UnityEngine.UI;
 
 public class ConfigPopupController : MonoBehaviour
 {
-
+    [SerializeField] private TMP_Text firstPlayer;
+    [SerializeField] private TMP_Text secondPlayer;
+    [SerializeField] private TMP_Text turnText;
     [SerializeField] private TMP_Dropdown chooseDropPiece;
     [SerializeField] private Button gameStartButton;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button firstPlayerButton;
+    [SerializeField] private Button secondPlayerButton;
+    private bool isBlackTurn = true;
 
-    public UnityAction<string, BoardType> action;
+    public UnityAction<string, BoardType, bool> action;
 
     private void Awake()
     {
         gameStartButton.onClick.AddListener(StartGame);
         closeButton.onClick.AddListener(ClosePanel);
+        firstPlayerButton.onClick.AddListener(ChooseFirstPlayer);
+        secondPlayerButton.onClick.AddListener(ChooseSecondPlayer);
+        chooseDropPiece.onValueChanged.AddListener(delegate { DropdownValueChanged(chooseDropPiece); });
     }
 
     private void StartGame()
@@ -88,12 +96,52 @@ public class ConfigPopupController : MonoBehaviour
                 boardType = BoardType.NoHandicap;
                 break;
         }
-        action.Invoke(boardJsonPath, boardType);
+        action.Invoke(boardJsonPath, boardType, isBlackTurn);
         ClosePanel();
     }
 
     private void ClosePanel()
     {
         this.gameObject.SetActive(false);
+    }
+
+
+    private void ChooseFirstPlayer()
+    {
+        isBlackTurn = true;
+        firstPlayerButton.image.color = new Color32(101, 173, 211, 255);
+        secondPlayerButton.image.color = new Color32(255, 255, 255, 255);
+        firstPlayer.text = "▲先手";
+        secondPlayer.text = "△後手";
+    }
+
+    private void ChooseSecondPlayer()
+    {
+        isBlackTurn = false;
+        firstPlayerButton.image.color = new Color32(255, 255, 255, 255);
+        secondPlayerButton.image.color = new Color32(101, 173, 211, 255);
+        firstPlayer.text = "△後手";
+        secondPlayer.text = "▲先手";
+    }
+
+    private void DropdownValueChanged(TMP_Dropdown change)
+    {
+        if (change.value == 0)
+        {
+            turnText.enabled = true;
+            firstPlayerButton.gameObject.SetActive(true);
+            secondPlayerButton.gameObject.SetActive(true);
+            firstPlayer.text = "▲先手";
+            secondPlayer.text = "△後手";
+        }
+        else
+        {
+            turnText.enabled = false;
+            firstPlayerButton.gameObject.SetActive(false);
+            secondPlayerButton.gameObject.SetActive(false);
+            firstPlayer.text = "△後手";
+            secondPlayer.text = "▲先手";
+            isBlackTurn = true;
+        }
     }
 }
