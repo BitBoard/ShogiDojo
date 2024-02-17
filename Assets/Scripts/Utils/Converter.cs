@@ -171,6 +171,30 @@ public class Converter
 				throw new Exception("Invalid piece type");
 		}
 	}
+	
+	public static PieceType DropPieceToPieceType(MSPiece piece, bool isAIFirst)
+	{
+		switch (piece)
+		{
+			case MSPiece.PAWN:
+				return isAIFirst ? PieceType.BlackPawn : PieceType.WhitePawn;
+			case MSPiece.LANCE:
+				return isAIFirst ? PieceType.BlackLance : PieceType.WhiteLance;
+			case MSPiece.KNIGHT:
+				return isAIFirst ? PieceType.BlackKnight : PieceType.WhiteKnight;
+			case MSPiece.SILVER:
+				return isAIFirst ? PieceType.BlackSilver : PieceType.WhiteSilver;
+			case MSPiece.GOLD:
+				return isAIFirst ? PieceType.BlackGold : PieceType.WhiteGold;
+			case MSPiece.BISHOP:
+				return isAIFirst ? PieceType.BlackBishop : PieceType.WhiteBishop;
+			case MSPiece.ROOK:
+				return isAIFirst ? PieceType.BlackRook : PieceType.WhiteRook;
+			default:
+				throw new Exception("Invalid piece type");
+		}
+	}
+
 
 	public static Square PosToSquare(int x, int y)
 	{
@@ -178,4 +202,17 @@ public class Converter
 		var rank = (Rank)(y);
 		return Util.MakeSquare(file, rank);
 	}
+
+	public static int SquareToX(Square square)
+	{
+		var file = (int)square.ToFile();
+		return 8 - file;
+	}
+	
+	public static int SquareToY(Square square)
+	{
+		var rank = (int)square.ToRank();
+		return rank;
+	}
+
 }

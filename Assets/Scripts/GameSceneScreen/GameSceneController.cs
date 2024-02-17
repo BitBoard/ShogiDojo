@@ -16,7 +16,9 @@ public class GameSceneController : MonoBehaviour
     private Piece selectedPiece = null;
     private bool isPieceSelected = false;
     private GameState gameState;
+    private IShogiAI battleAI;
     private bool isBlackTurn = true;
+    private bool isAIFirst = false;
     private bool shouldPromote = false;
     private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
@@ -30,6 +32,7 @@ public class GameSceneController : MonoBehaviour
 	{
 		gameState = new GameState();
 		gameState.ShowBoard();
+		battleAI = new RandomAI();
 	}
 
 	private void Init()
@@ -80,6 +83,10 @@ public class GameSceneController : MonoBehaviour
             {
 	            if (selectedPiece != null)
 	            {
+		            if (!IsPlayerTurn())
+		            {
+			            return;
+		            }
 		            await MovePiece(cell, isBlackTurn);
 	            }
             });
@@ -121,6 +128,10 @@ public class GameSceneController : MonoBehaviour
 			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
 			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
 			{
+				if (!IsPlayerTurn())
+				{
+					return;
+				}
 				await SelectPiece(piece.GetComponent<Piece>());
 			});
 			
@@ -241,6 +252,12 @@ public class GameSceneController : MonoBehaviour
 		selectedPiece.Outline.SetActive(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
+
+		// AIの手番の場合はAIの手を待つ
+		if (!IsPlayerTurn())
+		{
+			await GetAIAction();
+		}
 	}
 
 	/// <summary>
@@ -342,6 +359,12 @@ public class GameSceneController : MonoBehaviour
 		selectedPiece.Outline.SetActive(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
+		
+		// AIの手番の場合はAIの手を待つ
+		if (!IsPlayerTurn())
+		{
+			await GetAIAction();
+		}
 	}
 
 	/// <summary>
@@ -374,6 +397,10 @@ public class GameSceneController : MonoBehaviour
                 pieceByPrefab.GetComponent<Piece>().pieceType = pt;
                 pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
                 {
+	                if (!IsPlayerTurn())
+	                {
+		                return;
+	                }
 	                await SelectPiece(pieceByPrefab.GetComponent<Piece>());
                 });
 			}
@@ -387,6 +414,86 @@ public class GameSceneController : MonoBehaviour
 	{
 		piece.isPromoted = true;
 		piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType));
+	}
+	
+	/// <summary>
+	/// 盤上の駒を取得する
+	/// </summary>
+	/// <param name="x"></param>
+	/// <param name="y"></param>
+	/// <returns></returns>
+	private Piece GetPieceOnBoard(int x, int y)
+	{
+		var cell = cells[y, x];
+		var piece = cell.GetComponentInChildren<Piece>();
+		return piece;
+	}
+	
+	/// <summary>
+	/// 駒台の駒を取得する
+	/// </summary>
+	/// <param name="pieceType"></param>
+	/// <param name="isBlack"></param>
+	/// <returns></returns>
+	private Piece GetCapturedPiece(PieceType pieceType, bool isBlack)
+	{
+		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		var piece = capturePieceArea.GetComponentInChildren<Piece>();
+		return piece;
+	}
+	
+	private bool IsPlayerTurn()
+	{
+		return isBlackTurn != isAIFirst;
+	}
+
+	/// <summary>
+	/// AIによる着手を行う
+	/// </summary>
+	private async UniTask GetAIAction()
+	{
+		await UniTask.Delay(2000);
+		var move = battleAI.GetMove(gameState);
+		Debug.Log("AIの指し手:" + move.Pretty());
+		var from = move.IsDrop() ? Square.NB : move.From();
+		var fromX = move.IsDrop() ? -1 : Converter.SquareToX(from);
+		var fromY = move.IsDrop() ? -1 : Converter.SquareToY(from);
+		var to = move.To();
+		var toX = Converter.SquareToX(to);
+		var toY = Converter.SquareToY(to);
+		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
+		isPieceSelected = true;
+
+		// 駒を打つ場合
+		if (move.IsDrop())
+		{
+			var pieceType = Converter.DropPieceToPieceType(move.DroppedPiece(), isAIFirst);
+			selectedPiece = GetCapturedPiece(pieceType, isAIFirst);
+			await MovePiece(cells[toY, toX], isAIFirst);
+			return;
+		}
+		
+		// 駒を動かす場合
+		selectedPiece = GetPieceOnBoard(fromX, fromY);
+
+		// 駒が成る場合
+		if (move.IsPromote())
+		{
+			shouldPromote = true;
+			promoteSelectionDone = true;
+		}
+		
+		//移動先のマスにある駒を取得
+		var piece = GetPieceOnBoard(toX, toY);
+		if (piece != null)
+		{
+			await SelectPiece(piece);
+		}
+		else
+		{
+			await MovePiece(cells[toY, toX], isAIFirst);
+		}
+
 	}
 
 	public void OpenDebugMenu()
