@@ -125,18 +125,28 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log(boardData);
         foreach (var data in boardData.boardData)
         {
-            var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
-            piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
-            piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
+            var cellX = isAIFirst ? 8 - data.x : data.x;
+            var cellY = isAIFirst ? 8 - data.y : data.y;
+            var piece = Instantiate(piecePrefab, cells[cellY, cellX].transform);
 			if(isAIFirst)
-			{
-				// AIが先手の場合、blackpieceとwhitepieceの配置を逆にする
-                piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(8 - data.x, 8 - data.y);
-			}
-			else
-			{
-                piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
+            {
+				var pieceType = "";
+				if (data.pieceType.Contains("white"))
+				{
+					pieceType = data.pieceType.Replace("white", "black");
+				} else
+				{
+                    pieceType = data.pieceType.Replace("black", "white");
+                }
+                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
             }
+			else
+            {
+                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
+            }
+            piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
+			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(cellX, cellY);
+            
 			
 			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
 			{
@@ -483,7 +493,6 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
 		isPieceSelected = true;
 
-		/*
 		if(isAIFirst)
 		{
 			fromX = 8 - fromX;
@@ -491,7 +500,6 @@ public class GameSceneController : MonoBehaviour
 			toX = 8 - toX;
 			toY = 8 - toY;
 		}
-		*/
 
 		// 駒を打つ場合
 		if (move.IsDrop())
