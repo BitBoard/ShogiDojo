@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.UI;
 
 public class GameSceneView : MonoBehaviour
@@ -22,7 +22,7 @@ public class GameSceneView : MonoBehaviour
 	
 	public PromotePopupView PromotePopupView => promotePopupView;
 
-	// V‹K‘Î‹Ç‚É‹î‘ä‚Ì•\¦‚ğ‰Šú‰»
+	// æ–°è¦å¯¾å±€æ™‚ã«é§’å°ã®è¡¨ç¤ºã‚’åˆæœŸåŒ–
 	public void ClearAllCapturePieceArea()
 	{
 		ClearCapturePieceArea(blackCapturePieceArea.transform);
