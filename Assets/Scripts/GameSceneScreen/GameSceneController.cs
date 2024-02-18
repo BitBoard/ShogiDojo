@@ -106,6 +106,7 @@ public class GameSceneController : MonoBehaviour
 	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isAIFirst = false)
     {
         ClearPieces();
+		view.ClearAllCapturePieceArea();
         capturePieceAreaData = new CapturePieceAreaData();
         isPieceSelected = false;
         selectedPiece = null;
@@ -387,10 +388,7 @@ public class GameSceneController : MonoBehaviour
             var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
 
             // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
-            foreach (Transform child in capturePieceArea.transform)
-            {
-                Destroy(child.gameObject);
-            }
+			view.ClearCapturePieceArea(capturePieceArea.transform);
 
             // 駒台を更新
             foreach (PieceType pt in PieceData.getPieceTypeList(isBlack))
@@ -454,31 +452,8 @@ public class GameSceneController : MonoBehaviour
 		capturePieceAreaData.UpdateCapturePieceData(pieceType, isBlack);
         Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
 
-        // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
-        foreach (Transform child in capturePieceArea.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        // capturePieceAreaDataの情報を元に持ち駒の表示を更新
-//        foreach (PieceType pt in PieceData.getPieceTypeList(isBlack)) {
-//			for (var pieceNum = 0; pieceNum < capturePieceAreaData.getPieceNum(pt, isBlack); pieceNum++)
-//			{
-//				var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-//                pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt));
-//                pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-//                pieceByPrefab.GetComponent<Piece>().pieceType = pt;
-//				pieceByPrefab.GetComponent<Piece>().IsActivePeiceNumText(pieceNum);
-//                pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
-//                {
-//	                if (!IsPlayerTurn())
-//	                {
-//		                return;
-//	                }
-//	                await SelectPiece(pieceByPrefab.GetComponent<Piece>());
-//                });
-//			}
-//		};
+		// 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
+		view.ClearCapturePieceArea(capturePieceArea.transform);
 
         foreach (PieceType pt in PieceData.getPieceTypeList(isBlack))
         {
