@@ -504,11 +504,20 @@ public class GameSceneController : MonoBehaviour
 	/// <param name="pieceType"></param>
 	/// <param name="isBlack"></param>
 	/// <returns></returns>
-	private Piece GetCapturedPiece(PieceType pieceType, bool isBlack)
+	private Piece GetCapturedPiece(PieceType pieceType)
 	{
-		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
-		var piece = capturePieceArea.GetComponentInChildren<Piece>();
-		return piece;
+		var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		// 駒台にある駒で指定されたPieceTypeのものを取得
+		var pieceList = capturePieceArea.GetComponentsInChildren<Piece>();
+		foreach (var piece in pieceList)
+		{
+			if (piece.pieceType == pieceType)
+			{
+				return piece;
+			}
+		}
+		
+		return null;
 	}
 	
 	private bool IsPlayerTurn()
@@ -547,7 +556,8 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
 		isPieceSelected = true;
 
-		if(isAIFirst)
+		// AIが先手の場合は座標を反転させる
+		if(!IsPlayerBlack())
 		{
 			fromX = 8 - fromX;
 			fromY = 8 - fromY;
@@ -559,7 +569,8 @@ public class GameSceneController : MonoBehaviour
 		if (move.IsDrop())
 		{
 			var pieceType = Converter.DropPieceToPieceType(move.DroppedPiece(), isAIFirst);
-			selectedPiece = GetCapturedPiece(pieceType, isAIFirst);
+			Debug.Log("打つ駒:" + pieceType);
+			selectedPiece = GetCapturedPiece(pieceType);
 			await MovePiece(cells[toY, toX]);
 			return;
 		}
