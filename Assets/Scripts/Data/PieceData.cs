@@ -58,44 +58,44 @@ public partial class PieceData {
         }
     }
     
-    public static string PieceTypeToStr(PieceType pieceType)
+    public static string PieceTypeToStr(PieceType pieceType, bool isAIFirst)
     {
         // ここでPieceTypeから文字列に変換する
         // 例: PieceType.WhitePawn -> "white_pawn"
         switch (pieceType)
         {
             case PieceType.WhitePawn:
-                return "white_pawn";
+                return isAIFirst ? "white_pawn" : "black_pawn";
             case PieceType.WhiteLance:
-                return "white_lance";
+                return isAIFirst ? "white_lance" : "black_lance";
             case PieceType.WhiteKnight:
-                return "white_knight";
+                return isAIFirst ? "white_knight" : "black_knight";
             case PieceType.WhiteSilver:
-                return "white_silver";
+                return isAIFirst ? "white_silver" : "black_silver";
             case PieceType.WhiteGold:
-                return "white_gold";
+                return isAIFirst ? "white_gold" : "black_gold";
             case PieceType.WhiteBishop:
-                return "white_bishop";
+                return isAIFirst ? "white_bishop" : "black_bishop";
             case PieceType.WhiteRook:
-                return "white_rook";
+                return isAIFirst ? "white_rook" : "black_rook";
             case PieceType.WhiteKing:
-                return "white_king";
+                return isAIFirst ? "white_king" : "black_king";
             case PieceType.BlackPawn:
-                return "black_pawn";
+                return isAIFirst ? "black_pawn" : "white_pawn";
             case PieceType.BlackLance:
-                return "black_lance";
+                return isAIFirst ? "black_lance" : "white_lance";
             case PieceType.BlackKnight:
-                return "black_knight";
+                return isAIFirst ? "black_knight" : "white_knight";
             case PieceType.BlackSilver:
-                return "black_silver";
+                return isAIFirst ? "black_silver" : "white_silver";
             case PieceType.BlackGold:
-                return "black_gold";
+                return isAIFirst ? "black_gold" : "white_gold";
             case PieceType.BlackBishop:
-                return "black_bishop";
+                return isAIFirst ? "black_bishop" : "white_bishop";
             case PieceType.BlackRook:
-                return "black_rook";
+                return isAIFirst ? "black_rook" : "white_rook";
             case PieceType.BlackKing:
-                return "black_king";
+                return isAIFirst ? "black_king" : "white_king";
             default:
                 return "none";
         }
@@ -181,16 +181,6 @@ public partial class PieceData {
             default:
                 return PieceType.None;
         }
-    }
-
-    /// <summary>
-    /// 取った駒を取ったプレイヤーの駒に変換する
-    /// </summary>
-    /// <param name="pieceType"></param>
-    /// <returns></returns>
-    public static string CapturePieceTypeToStr(PieceType pieceType)
-    {
-        return PieceTypeToStr(GetCapturePieceType(pieceType));
     }
 
     public static PieceType[] getPieceTypeList(bool isBlack)
