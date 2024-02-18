@@ -14,13 +14,17 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public bool isPromoted = false;
     public TextMeshProUGUI pieceNumText;
 
-    public Square SqPos => Converter.PosToSquare(piecePotition.x, piecePotition.y);
     public GameObject Outline => outline;
     
    void Awake()
     {
         // 駒数の表示はデフォルトで非有効化する
         pieceNumText.gameObject.SetActive(false);
+    }
+
+    public Square SqPos(bool isAIFirst)
+    {
+        return Converter.PosToSquare(piecePotition.x, piecePotition.y, isAIFirst);
     }
 
     public void OnPointerClick(PointerEventData eventData)

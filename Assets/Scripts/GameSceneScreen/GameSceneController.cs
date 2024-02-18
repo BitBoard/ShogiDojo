@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameSceneController : MonoBehaviour
@@ -28,25 +29,25 @@ public class GameSceneController : MonoBehaviour
 		Init();
 	}
 	
-	private void Start()
-	{
-		gameState = new GameState();
-		gameState.ShowBoard();
-		battleAI = new RandomAI();
+	private async void Start()
+    {
+       await InitBoard();
 	}
 
 	private void Init()
 	{
         SetEvent();
         SetCells();
-		InitBoard();
 	}
 	
 	private void SetEvent()
 	{
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
-		configPopupController.action += InitBoard;
+		configPopupController.action += new UnityAction<string, BoardType, bool>((boardJsonPath, boardType, isBlackTurn) =>
+        {
+            UniTask.Void(async () => await InitBoard(boardJsonPath, boardType, isBlackTurn));
+        });
 		view.PromotePopupView.PromoteButton.onClick.AddListener(() =>
 		{
 			shouldPromote = true;
@@ -102,15 +103,17 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
-	private void InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
+	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isAIFirst = false)
     {
         ClearPieces();
         capturePieceAreaData = new CapturePieceAreaData();
         isPieceSelected = false;
         selectedPiece = null;
-		isBlackTurn = true;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
+        battleAI = new RandomAI();
+        this.isBlackTurn = true;
+		this.isAIFirst = isAIFirst;
 
         if (String.IsNullOrEmpty(boardJsonPath))
 		{
@@ -122,10 +125,29 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log(boardData);
         foreach (var data in boardData.boardData)
         {
-            var piece = Instantiate(piecePrefab, cells[data.y, data.x].transform);
-            piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
+            var cellX = isAIFirst ? 8 - data.x : data.x;
+            var cellY = isAIFirst ? 8 - data.y : data.y;
+            var piece = Instantiate(piecePrefab, cells[cellY, cellX].transform);
+			if(isAIFirst)
+            {
+				var pieceType = "";
+				if (data.pieceType.Contains("white"))
+				{
+					pieceType = data.pieceType.Replace("white", "black");
+				} else
+				{
+                    pieceType = data.pieceType.Replace("black", "white");
+                }
+                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
+            }
+			else
+            {
+                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
+            }
             piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
-			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(data.x, data.y);
+			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(cellX, cellY);
+            
+			
 			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
 			{
 				if (!IsPlayerTurn())
@@ -136,6 +158,11 @@ public class GameSceneController : MonoBehaviour
 			});
 			
 	    }
+
+		if (isAIFirst)
+		{
+			await GetAIAction();
+		}
     }
 
 	private void ClearPieces()
@@ -184,8 +211,8 @@ public class GameSceneController : MonoBehaviour
 			return;
 		}
 		
-		var from = selectedPiece.SqPos;
-		var to = piece.SqPos;
+		var from = selectedPiece.SqPos(isAIFirst);
+		var to = piece.SqPos(isAIFirst);
 		
 		// 合法手かどうかを判定する
 		var move = Util.MakeMove(from, to);
@@ -228,6 +255,10 @@ public class GameSceneController : MonoBehaviour
 				decidedMove = movePromote;
 				PromotePiece(selectedPiece);
 			}
+			
+			// 変数を初期化
+			shouldPromote = false;
+			promoteSelectionDone = false;
 		}
 		
 
@@ -280,15 +311,15 @@ public class GameSceneController : MonoBehaviour
 		if (selectedPiece.IsCaptured())
 		{
 			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
-			var to = cell.SqPos;
+			var to = cell.SqPos(isAIFirst);
 			move = Util.MakeMoveDrop(pt, to);
 			decidedMove = move;
 		}
 		else
 		{
 			// 盤上の駒を移動する場合
-			var from = selectedPiece.SqPos;
-			var to = cell.SqPos;
+			var from = selectedPiece.SqPos(isAIFirst);
+			var to = cell.SqPos(isAIFirst);
 			move = Util.MakeMove(from, to);
 			movePromote = Util.MakeMovePromote(from, to);
 			decidedMove = move;
@@ -320,9 +351,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			// 成るかどうかを選択する
 			view.PromotePopupView.gameObject.SetActive(true);
-			shouldPromote = false;
-			promoteSelectionDone = false;
-			
+
 			// ここで待機する
 			await UniTask.WaitUntil(() => promoteSelectionDone);
 			
@@ -331,6 +360,10 @@ public class GameSceneController : MonoBehaviour
 				decidedMove = movePromote;
 				PromotePiece(selectedPiece);
 			}
+			
+			// 変数を初期化
+			shouldPromote = false;
+			promoteSelectionDone = false;
 		}
 		
 		// 選択されている駒を移動させる
@@ -497,6 +530,7 @@ public class GameSceneController : MonoBehaviour
 	
 	private bool IsPlayerTurn()
 	{
+		// 「先手のターンかつAIが後手」「後手のターンかつAIが先手」の場合、プレイヤーは手番を持っている
 		return isBlackTurn != isAIFirst;
 	}
 
@@ -514,8 +548,17 @@ public class GameSceneController : MonoBehaviour
 		var to = move.To();
 		var toX = Converter.SquareToX(to);
 		var toY = Converter.SquareToY(to);
+
 		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
 		isPieceSelected = true;
+
+		if(isAIFirst)
+		{
+			fromX = 8 - fromX;
+			fromY = 8 - fromY;
+			toX = 8 - toX;
+			toY = 8 - toY;
+		}
 
 		// 駒を打つ場合
 		if (move.IsDrop())
@@ -533,8 +576,10 @@ public class GameSceneController : MonoBehaviour
 		if (move.IsPromote())
 		{
 			shouldPromote = true;
-			promoteSelectionDone = true;
 		}
+		
+		// 成り不成を選択完了とする
+		promoteSelectionDone = true;
 		
 		//移動先のマスにある駒を取得
 		var piece = GetPieceOnBoard(toX, toY);
@@ -546,7 +591,10 @@ public class GameSceneController : MonoBehaviour
 		{
 			await MovePiece(cells[toY, toX], isAIFirst);
 		}
-
+		
+		// 変数を初期化
+		shouldPromote = false;
+		promoteSelectionDone = false;
 	}
 
 	public void OpenDebugMenu()
