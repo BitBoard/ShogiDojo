@@ -243,12 +243,15 @@ public class GameSceneController : MonoBehaviour
 		if (gameState.IsValidMove(move) && gameState.IsValidMove(movePromote))
 		{
 			// 成るかどうかを選択する
-			view.PromotePopupView.gameObject.SetActive(true);
-			shouldPromote = false;
-			promoteSelectionDone = false;
-			
+			if (!promoteSelectionDone)
+			{
+				view.PromotePopupView.gameObject.SetActive(true);
+			}
+
 			// ここで待機する
 			await UniTask.WaitUntil(() => promoteSelectionDone);
+			
+			Debug.Log("成るかどうか:" + shouldPromote);
 			
 			if (shouldPromote)
 			{
@@ -350,10 +353,15 @@ public class GameSceneController : MonoBehaviour
 		if (gameState.IsValidMove(move) && gameState.IsValidMove(movePromote))
 		{
 			// 成るかどうかを選択する
-			view.PromotePopupView.gameObject.SetActive(true);
+			if (!promoteSelectionDone)
+			{
+				view.PromotePopupView.gameObject.SetActive(true);
+			}
 
 			// ここで待機する
 			await UniTask.WaitUntil(() => promoteSelectionDone);
+			
+			Debug.Log("成るかどうか:" + shouldPromote);
 			
 			if (shouldPromote)
 			{
