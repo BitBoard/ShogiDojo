@@ -269,7 +269,7 @@ public class GameSceneController : MonoBehaviour
 		// 選択されている駒を移動させる
 		selectedPiece.transform.SetParent(piece.transform.parent);
 		// 移動先のマスの駒を取る
-		CapturePiece(piece, isBlackTurn);
+		CapturePiece(piece);
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
 		selectedPiece.piecePotition = new PieceData.PiecePotition(piece.piecePotition.x, piece.piecePotition.y);
@@ -443,21 +443,21 @@ public class GameSceneController : MonoBehaviour
 	/// </summary>
 	/// <param name="piece"></param>
 	/// <param name="isBlack"></param>
-	private void CapturePiece(Piece piece, bool isBlack)
+	private void CapturePiece(Piece piece)
 	{
-		var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
 		var pieceType = piece.pieceType;
 		Debug.Log("取った駒:" + pieceType);
 
-		capturePieceAreaData.UpdateCapturePieceData(pieceType, isBlack);
+		capturePieceAreaData.UpdateCapturePieceData(pieceType, IsPlayerTurn());
         Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
 
 		// 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
 		view.ClearCapturePieceArea(capturePieceArea.transform);
 
-        foreach (PieceType pt in PieceData.getPieceTypeList(isBlack))
+        foreach (PieceType pt in PieceData.getPieceTypeList(IsPlayerTurn()))
         {
-			var pieceNum = capturePieceAreaData.getPieceNum(pt, isBlack);
+			var pieceNum = capturePieceAreaData.getPieceNum(pt, IsPlayerTurn());
 			if(pieceNum == 0) continue;
 
             var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
