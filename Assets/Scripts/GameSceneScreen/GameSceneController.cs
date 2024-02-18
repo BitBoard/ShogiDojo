@@ -88,7 +88,7 @@ public class GameSceneController : MonoBehaviour
 		            {
 			            return;
 		            }
-		            await MovePiece(cell, isBlackTurn);
+		            await MovePiece(cell);
 	            }
             });
 
@@ -301,7 +301,7 @@ public class GameSceneController : MonoBehaviour
 	/// </summary>
 	/// <param name="cell"></param>
 	/// <param name="isBlack"></param>
-	private async UniTask MovePiece(Cell cell, bool isBlack)
+	private async UniTask MovePiece(Cell cell)
 	{
 		if (!isPieceSelected)
 		{
@@ -380,24 +380,24 @@ public class GameSceneController : MonoBehaviour
 
 		// 持ち駒が消費されていた場合は持ち駒情報を更新する
 		if(selectedPiece.IsCaptured()) {
-			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.pieceType, isBlack, selectedPiece.IsCaptured());
+			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.pieceType, IsUpdateBlack(), selectedPiece.IsCaptured());
             Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
             // 駒数表示を非有効化
             selectedPiece.IsActivePeiceNumText(0);
 
-            var capturePieceArea = isBlack ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+            var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
 
             // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
 			view.ClearCapturePieceArea(capturePieceArea.transform);
 
             // 駒台を更新
-            foreach (PieceType pt in PieceData.getPieceTypeList(isBlack))
+            foreach (PieceType pt in PieceData.getPieceTypeList(IsUpdateBlack()))
             {
-                var pieceNum = capturePieceAreaData.getPieceNum(pt, isBlack);
+                var pieceNum = capturePieceAreaData.getPieceNum(pt, IsUpdateBlack());
                 if (pieceNum == 0) continue;
 
                 var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-                pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt));
+                pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
                 pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
                 pieceByPrefab.GetComponent<Piece>().pieceType = pt;
                 pieceByPrefab.GetComponent<Piece>().IsActivePeiceNumText(pieceNum);
@@ -449,19 +449,19 @@ public class GameSceneController : MonoBehaviour
 		var pieceType = piece.pieceType;
 		Debug.Log("取った駒:" + pieceType);
 
-		capturePieceAreaData.UpdateCapturePieceData(pieceType, IsPlayerTurn());
+		capturePieceAreaData.UpdateCapturePieceData(pieceType, IsUpdateBlack());
         Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
 
 		// 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
 		view.ClearCapturePieceArea(capturePieceArea.transform);
 
-        foreach (PieceType pt in PieceData.getPieceTypeList(IsPlayerTurn()))
+        foreach (PieceType pt in PieceData.getPieceTypeList(IsUpdateBlack()))
         {
-			var pieceNum = capturePieceAreaData.getPieceNum(pt, IsPlayerTurn());
+			var pieceNum = capturePieceAreaData.getPieceNum(pt, IsUpdateBlack());
 			if(pieceNum == 0) continue;
 
             var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-            pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt));
+            pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
             pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
             pieceByPrefab.GetComponent<Piece>().pieceType = pt;
             pieceByPrefab.GetComponent<Piece>().IsActivePeiceNumText(pieceNum);
@@ -517,10 +517,22 @@ public class GameSceneController : MonoBehaviour
 		return isBlackTurn != isAIFirst;
 	}
 
-	/// <summary>
-	/// AIによる着手を行う
-	/// </summary>
-	private async UniTask GetAIAction()
+    private bool IsPlayerBlack()
+    {
+        // プレイヤーの持つ駒のPieceTypeがBlackかWhiteかを判定
+        return !isAIFirst;
+    }
+
+    private bool IsUpdateBlack()
+    {
+		// 更新したい情報に関連するPieceTypeがBlackに紐づいているかWhiteに紐づいているかを判定
+		return IsPlayerBlack() == IsPlayerTurn();
+    }
+
+    /// <summary>
+    /// AIによる着手を行う
+    /// </summary>
+    private async UniTask GetAIAction()
 	{
 		await UniTask.Delay(2000);
 		var move = battleAI.GetMove(gameState);
@@ -548,7 +560,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			var pieceType = Converter.DropPieceToPieceType(move.DroppedPiece(), isAIFirst);
 			selectedPiece = GetCapturedPiece(pieceType, isAIFirst);
-			await MovePiece(cells[toY, toX], isAIFirst);
+			await MovePiece(cells[toY, toX]);
 			return;
 		}
 		
@@ -572,7 +584,7 @@ public class GameSceneController : MonoBehaviour
 		}
 		else
 		{
-			await MovePiece(cells[toY, toX], isAIFirst);
+			await MovePiece(cells[toY, toX]);
 		}
 		
 		// 変数を初期化
