@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using MyShogi.Model.Shogi.Core;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
@@ -11,8 +12,15 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     public PieceData.PiecePotition piecePotition;
     public UnityAction OnClickAction;
     public bool isPromoted = false;
-    
+    public TextMeshProUGUI pieceNumText;
+
     public GameObject Outline => outline;
+    
+   void Awake()
+    {
+        // 駒数の表示はデフォルトで非有効化する
+        pieceNumText.gameObject.SetActive(false);
+    }
 
     public Square SqPos(bool isAIFirst)
     {
@@ -45,5 +53,21 @@ public class Piece : MonoBehaviour, IPointerClickHandler
     {
         return Converter.PosToSign(this.piecePotition.x, this.piecePotition.y) + " " + this.pieceType.ToString() +
                " x:" + this.piecePotition.x + " y:" + this.piecePotition.y;
+    }
+
+    public void IsActivePeiceNumText(int pieceNum)
+    {
+        // 駒の枚数表示テキストを更新
+        pieceNumText.text = "×" + pieceNum.ToString();
+
+        if (IsCaptured() && pieceNum >= 2)
+        {
+            pieceNumText.gameObject.SetActive(true);
+            Debug.Log(pieceNumText.text);
+        }
+        else
+        {
+            pieceNumText.gameObject.SetActive(false);
+        }
     }
 }
