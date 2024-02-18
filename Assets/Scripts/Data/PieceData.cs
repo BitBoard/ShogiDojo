@@ -106,34 +106,34 @@ public partial class PieceData {
     /// </summary>
     /// <param name="pieceType"></param>
     /// <returns></returns>
-    public static string PieceTypeToPromoteStr(PieceType pieceType)
+    public static string PieceTypeToPromoteStr(PieceType pieceType, bool isAIFirst)
     {
         switch (pieceType)
         {
             case PieceType.WhitePawn:
-                return "white_prom_pawn";
+                return isAIFirst? "black_prom_pawn" : "white_prom_pawn";
             case PieceType.WhiteLance:
-                return "white_prom_lance";
+                return isAIFirst ? "black_prom_lance" : "white_prom_lance";
             case PieceType.WhiteKnight:
-                return "white_prom_knight";
+                return isAIFirst ? "black_prom_knight" : "white_prom_knight";
             case PieceType.WhiteSilver:
-                return "white_prom_silver";
+                return isAIFirst ? "black_prom_silver" : "white_prom_silver";
             case PieceType.WhiteBishop:
-                return "white_horse";
+                return isAIFirst ? "black_horse" : "white_horse";
             case PieceType.WhiteRook:
-                return "white_dragon";
+                return isAIFirst ? "black_dragon" : "white_dragon";
             case PieceType.BlackPawn:
-                return "black_prom_pawn";
+                return isAIFirst ? "white_prom_pawn" : "black_prom_pawn";
             case PieceType.BlackLance:
-                return "black_prom_lance";
+                return isAIFirst ? "white_prom_lance" : "black_prom_lance";
             case PieceType.BlackKnight:
-                return "black_prom_knight";
+                return isAIFirst ? "white_prom_knight" : "black_prom_knight";
             case PieceType.BlackSilver:
-                return "black_prom_silver";
+                return isAIFirst ? "white_prom_silver" : "black_prom_silver";
             case PieceType.BlackBishop:
-                return "black_horse";
+                return isAIFirst ? "white_horse" : "black_horse";
             case PieceType.BlackRook:
-                return "black_dragon";
+                return isAIFirst ? "white_dragon" : "black_dragon";
             default:
                 throw new Exception("成れない駒です。");
         }
