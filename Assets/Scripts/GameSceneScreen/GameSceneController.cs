@@ -255,6 +255,10 @@ public class GameSceneController : MonoBehaviour
 				decidedMove = movePromote;
 				PromotePiece(selectedPiece);
 			}
+			
+			// 変数を初期化
+			shouldPromote = false;
+			promoteSelectionDone = false;
 		}
 		
 
@@ -347,9 +351,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			// 成るかどうかを選択する
 			view.PromotePopupView.gameObject.SetActive(true);
-			shouldPromote = false;
-			promoteSelectionDone = false;
-			
+
 			// ここで待機する
 			await UniTask.WaitUntil(() => promoteSelectionDone);
 			
@@ -358,6 +360,10 @@ public class GameSceneController : MonoBehaviour
 				decidedMove = movePromote;
 				PromotePiece(selectedPiece);
 			}
+			
+			// 変数を初期化
+			shouldPromote = false;
+			promoteSelectionDone = false;
 		}
 		
 		// 選択されている駒を移動させる
@@ -517,8 +523,10 @@ public class GameSceneController : MonoBehaviour
 		if (move.IsPromote())
 		{
 			shouldPromote = true;
-			promoteSelectionDone = true;
 		}
+		
+		// 成り不成を選択完了とする
+		promoteSelectionDone = true;
 		
 		//移動先のマスにある駒を取得
 		var piece = GetPieceOnBoard(toX, toY);
@@ -530,7 +538,10 @@ public class GameSceneController : MonoBehaviour
 		{
 			await MovePiece(cells[toY, toX], isAIFirst);
 		}
-
+		
+		// 変数を初期化
+		shouldPromote = false;
+		promoteSelectionDone = false;
 	}
 
 	public void OpenDebugMenu()
