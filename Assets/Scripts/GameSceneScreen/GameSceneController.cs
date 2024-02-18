@@ -227,7 +227,7 @@ public class GameSceneController : MonoBehaviour
 			{
 				// この場合は強制的に成る
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece);
+				PromotePiece(selectedPiece, isAIFirst);
 			}
 			else
 			{
@@ -253,7 +253,7 @@ public class GameSceneController : MonoBehaviour
 			if (shouldPromote)
 			{
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece);
+				PromotePiece(selectedPiece, isAIFirst);
 			}
 			
 			// 変数を初期化
@@ -334,7 +334,7 @@ public class GameSceneController : MonoBehaviour
 			{
 				// この場合は強制的に成る
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece);
+				PromotePiece(selectedPiece, isAIFirst);
 			}
 			else
 			{
@@ -358,7 +358,7 @@ public class GameSceneController : MonoBehaviour
 			if (shouldPromote)
 			{
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece);
+				PromotePiece(selectedPiece, isAIFirst);
 			}
 			
 			// 変数を初期化
@@ -496,10 +496,10 @@ public class GameSceneController : MonoBehaviour
         Destroy(piece.gameObject);
 	}
 	
-	private void PromotePiece(Piece piece)
+	private void PromotePiece(Piece piece, bool isAIFirst)
 	{
 		piece.isPromoted = true;
-		piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType));
+		piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType, isAIFirst));
 	}
 	
 	/// <summary>
