@@ -6,7 +6,21 @@ using UnityEngine;
 
 public class Management : SingletonMonoBehaviour<Management>
 {
-	protected override void doAwake()
+
+	// 駒の画像を保存するDictionary
+	private Dictionary<PieceType, Sprite> pieceSprites = new Dictionary<PieceType, Sprite>();
+
+
+	private void InitPieceSpritesDictionary() 
+	{
+		foreach (PieceType pieceType in Enum.GetValues(typeof(PieceType)))
+		{
+			pieceSprites[pieceType] = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType.ToString());
+        }
+	}
+
+
+    protected override void doAwake()
 	{
 		Init();
 	}
@@ -14,6 +28,12 @@ public class Management : SingletonMonoBehaviour<Management>
 	private void Init()
 	{
 		Initializer.Init(); // ゲームが始まる時に一回だけ呼ぶ
-		Debug.Log("Management初期化完了");
+		InitPieceSpritesDictionary(); // ゲーム開始時に一回だけ駒の画像を読み込む
+        Debug.Log("Management初期化完了");
+	}
+
+	public Sprite GetPieceSprite(PieceType pieceType)
+	{
+		return pieceSprites[pieceType];
 	}
 }
