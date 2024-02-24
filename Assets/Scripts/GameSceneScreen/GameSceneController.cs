@@ -24,14 +24,10 @@ public class GameSceneController : MonoBehaviour
     private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
 
-    private void Awake()
-	{
-		Init();
-	}
-	
 	private async void Start()
-    {
-       await InitBoard();
+    { 
+	    Init(); 
+	    await InitBoard();
 	}
 
 	private void Init()
@@ -145,8 +141,8 @@ public class GameSceneController : MonoBehaviour
             {
                 piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
             }
-            piece.GetComponent<Piece>().pieceType = PieceData.StrToPieceType(data.pieceType);
-			piece.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(cellX, cellY);
+            piece.GetComponent<Piece>().SetPieceType(PieceData.StrToPieceType(data.pieceType));
+			piece.GetComponent<Piece>().SetPiecePosition(cellX, cellY);
             
 			
 			piece.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
@@ -166,6 +162,9 @@ public class GameSceneController : MonoBehaviour
 		}
     }
 
+	/// <summary>
+	/// 盤上の駒を全て消去する
+	/// </summary>
 	private void ClearPieces()
 	{
 		foreach (var cell in cells)
@@ -196,7 +195,7 @@ public class GameSceneController : MonoBehaviour
 			}
 			// 駒を選択する
 			selectedPiece = piece;
-			selectedPiece.Outline.SetActive(true);
+			selectedPiece.SetIsShowOutline(true);
 			isPieceSelected = true;
 			Debug.Log("選択した駒:" + piece.ToString());
 			return;
@@ -207,7 +206,7 @@ public class GameSceneController : MonoBehaviour
 		{
 			Debug.Log("不正な手です");
 			isPieceSelected = false;
-			selectedPiece.Outline.SetActive(false);
+			selectedPiece.SetIsShowOutline(false);
 			selectedPiece = null;
 			return;
 		}
@@ -228,13 +227,13 @@ public class GameSceneController : MonoBehaviour
 			{
 				// この場合は強制的に成る
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece, isAIFirst);
+				selectedPiece.Promotion();
 			}
 			else
 			{
 				Debug.Log("不正な手です");
 				isPieceSelected = false;
-				selectedPiece.Outline.SetActive(false);
+				selectedPiece.SetIsShowOutline(false);
 				selectedPiece = null;
 				return;
 			}
@@ -257,7 +256,7 @@ public class GameSceneController : MonoBehaviour
 			if (shouldPromote)
 			{
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece, isAIFirst);
+				selectedPiece.Promotion();
 			}
 			
 			// 変数を初期化
@@ -272,7 +271,8 @@ public class GameSceneController : MonoBehaviour
 		CapturePiece(piece);
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
-		selectedPiece.piecePotition = new PieceData.PiecePotition(piece.piecePotition.x, piece.piecePotition.y);
+		var pos = piece.GetPiecePosition();
+		selectedPiece.SetPiecePosition(pos.x, pos.y);
 		
 		// 駒音を再生する
 		selectedPiece.GetComponent<AudioSource>().Play();
@@ -284,7 +284,7 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		
 		isPieceSelected = false;
-		selectedPiece.Outline.SetActive(false);
+		selectedPiece.SetIsShowOutline(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
 
@@ -314,7 +314,7 @@ public class GameSceneController : MonoBehaviour
 		// 持ち駒を打つ場合
 		if (selectedPiece.IsCaptured())
 		{
-			var pt = Converter.PieceTypeToDropPiece(selectedPiece.pieceType);
+			var pt = Converter.PieceTypeToDropPiece(selectedPiece.GetPieceType());
 			var to = cell.SqPos(isAIFirst);
 			move = Util.MakeMoveDrop(pt, to);
 			decidedMove = move;
@@ -338,13 +338,13 @@ public class GameSceneController : MonoBehaviour
 			{
 				// この場合は強制的に成る
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece, isAIFirst);
+				selectedPiece.Promotion();
 			}
 			else
 			{
 				Debug.Log("不正な手です");
 				isPieceSelected = false;
-				selectedPiece.Outline.SetActive(false);
+				selectedPiece.SetIsShowOutline(false);
 				selectedPiece = null;
 				return;
 			}
@@ -367,7 +367,7 @@ public class GameSceneController : MonoBehaviour
 			if (shouldPromote)
 			{
 				decidedMove = movePromote;
-				PromotePiece(selectedPiece, isAIFirst);
+				selectedPiece.Promotion();
 			}
 			
 			// 変数を初期化
@@ -380,10 +380,10 @@ public class GameSceneController : MonoBehaviour
 
 		// 持ち駒が消費されていた場合は持ち駒情報を更新する
 		if(selectedPiece.IsCaptured()) {
-			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.pieceType, IsUpdateBlack(), selectedPiece.IsCaptured());
+			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.GetPieceType(), IsUpdateBlack(), selectedPiece.IsCaptured());
             Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
             // 駒数表示を非有効化
-            selectedPiece.IsActivePeiceNumText(0);
+            selectedPiece.SetPieceNum(0);
 
             var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
 
@@ -398,9 +398,9 @@ public class GameSceneController : MonoBehaviour
 
                 var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
                 pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
-                pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-                pieceByPrefab.GetComponent<Piece>().pieceType = pt;
-                pieceByPrefab.GetComponent<Piece>().IsActivePeiceNumText(pieceNum);
+                pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
+                pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
+                pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
                 pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
                 {
                     if (!IsPlayerTurn())
@@ -415,7 +415,7 @@ public class GameSceneController : MonoBehaviour
 
 		// 駒の位置を更新する
 		selectedPiece.transform.localPosition = Vector3.zero;
-		selectedPiece.piecePotition = new PieceData.PiecePotition(cell.x, cell.y);
+		selectedPiece.SetPiecePosition(cell.x, cell.y);
 
         // 駒音を再生する
         selectedPiece.GetComponent<AudioSource>().Play();
@@ -427,7 +427,7 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		
 		isPieceSelected = false;
-		selectedPiece.Outline.SetActive(false);
+		selectedPiece.SetIsShowOutline(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
 		
@@ -442,11 +442,10 @@ public class GameSceneController : MonoBehaviour
 	/// 駒を取る処理
 	/// </summary>
 	/// <param name="piece"></param>
-	/// <param name="isBlack"></param>
 	private void CapturePiece(Piece piece)
 	{
 		var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
-		var pieceType = piece.pieceType;
+		var pieceType = piece.GetPieceType();
 		Debug.Log("取った駒:" + pieceType);
 
 		capturePieceAreaData.UpdateCapturePieceData(pieceType, IsUpdateBlack());
@@ -462,9 +461,9 @@ public class GameSceneController : MonoBehaviour
 
             var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
             pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
-            pieceByPrefab.GetComponent<Piece>().piecePotition = new PieceData.PiecePotition(-1, -1);
-            pieceByPrefab.GetComponent<Piece>().pieceType = pt;
-            pieceByPrefab.GetComponent<Piece>().IsActivePeiceNumText(pieceNum);
+            pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
+            pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
+            pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
             pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
             {
                 if (!IsPlayerTurn())
@@ -478,13 +477,7 @@ public class GameSceneController : MonoBehaviour
         // 取った駒を消去する
         Destroy(piece.gameObject);
 	}
-	
-	private void PromotePiece(Piece piece, bool isAIFirst)
-	{
-		piece.isPromoted = true;
-        piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType, isAIFirst));
-    }
-	
+
 	/// <summary>
 	/// 盤上の駒を取得する
 	/// </summary>
@@ -511,7 +504,7 @@ public class GameSceneController : MonoBehaviour
 		var pieceList = capturePieceArea.GetComponentsInChildren<Piece>();
 		foreach (var piece in pieceList)
 		{
-			if (piece.pieceType == pieceType)
+			if (piece.GetPieceType() == pieceType)
 			{
 				return piece;
 			}
