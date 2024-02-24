@@ -105,7 +105,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 		model.SetPieceType(pieceType);
 	}
 	
-	public PieceData.PiecePosition GetPiecePosition()
+	public PiecePosition GetPiecePosition()
 	{
 		return model.PiecePosition.Value;
 	}
@@ -117,7 +117,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 	/// <param name="y"></param>
 	public void SetPiecePosition(int x, int y)
 	{
-		model.SetPiecePosition(new PieceData.PiecePosition(x, y));
+		model.SetPiecePosition(new PiecePosition(x, y));
 	}
 	
 	/// <summary>

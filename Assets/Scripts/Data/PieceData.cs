@@ -2,18 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public partial class PieceData {
-    public class PiecePosition
-    {
-        public int x;
-        public int y;
-
-        public PiecePosition(int x, int y) 
-        {
-            this.x = x;
-            this.y = y;
-        }
-    }
+public class PieceData {
 
     public static PieceType StrToPieceType(string pieceTypeStr)
     {
@@ -55,86 +44,6 @@ public partial class PieceData {
                 return PieceType.FrontKing;
             default:
                 return PieceType.None;
-        }
-    }
-
-    // ここでPieceTypeから文字列に変換する
-    public static string PieceTypeToStr(PieceType pieceType, bool isAIFirst)
-    {
-        switch (pieceType)
-        {
-            case PieceType.BackPawn:
-                return isAIFirst ? "BackPawn" : "FrontPawn";
-            case PieceType.BackLance:
-                return isAIFirst ? "BackLance" : "FrontLance";
-            case PieceType.BackKnight:
-                return isAIFirst ? "BackKnight" : "FrontKnight";
-            case PieceType.BackSilver:
-                return isAIFirst ? "BackSilver" : "FrontSilver";
-            case PieceType.BackGold:
-                return isAIFirst ? "BackGold" : "FrontGold";
-            case PieceType.BackBishop:
-                return isAIFirst ? "BackBishop" : "FrontBishop";
-            case PieceType.BackRook:
-                return isAIFirst ? "BackRook" : "FrontRook";
-            case PieceType.BackKing:
-                return isAIFirst ? "BackKing" : "FrontKing";
-            case PieceType.FrontPawn:
-                return isAIFirst ? "FrontPawn" : "BackPawn";
-            case PieceType.FrontLance:
-                return isAIFirst ? "FrontLance" : "BackLance";
-            case PieceType.FrontKnight:
-                return isAIFirst ? "FrontKnight" : "BackKnight";
-            case PieceType.FrontSilver:
-                return isAIFirst ? "FrontSilver" : "BackSilver";
-            case PieceType.FrontGold:
-                return isAIFirst ? "FrontGold" : "BackGold";
-            case PieceType.FrontBishop:
-                return isAIFirst ? "FrontBishop" : "BackBishop";
-            case PieceType.FrontRook:
-                return isAIFirst ? "FrontRook" : "BackRook";
-            case PieceType.FrontKing:
-                return isAIFirst ? "FrontKing" : "BackKing";
-            default:
-                return "None";
-        }
-    }
-
-    // <summary>
-    // 成駒の文字列を取得する
-    // </summary>
-    // <param name="pieceType"></param>
-    // <returns></returns>
-    public static string PieceTypeToPromoteStr(PieceType pieceType, bool isAIFirst)
-    {
-        switch (pieceType)
-        {
-            case PieceType.BackPawn:
-                return isAIFirst ? "FrontPawnPromoted" : "BackPawnPromoted";
-            case PieceType.BackLance:
-                return isAIFirst ? "FrontLancePromoted" : "BackLancePromoted";
-            case PieceType.BackKnight:
-                return isAIFirst ? "FrontKnightPromoted" : "BackKnightPromoted";
-            case PieceType.BackSilver:
-                return isAIFirst ? "FrontSilverPromoted" : "BackSilverPromoted";
-            case PieceType.BackBishop:
-                return isAIFirst ? "FrontBishopPromoted" : "BackBishopPromoted";
-            case PieceType.BackRook:
-                return isAIFirst ? "FrontRookPromoted" : "BackRookPromoted";
-            case PieceType.FrontPawn:
-                return isAIFirst ? "BackPawnPromoted" : "FrontPawnPromoted";
-            case PieceType.FrontLance:
-                return isAIFirst ? "BackLancePromoted" : "FrontLancePromoted";
-            case PieceType.FrontKnight:
-                return isAIFirst ? "BackKnightPromoted" : "FrontKnightPromoted";
-            case PieceType.FrontSilver:
-                return isAIFirst ? "BackSilverPromoted" : "FrontSilverPromoted";
-            case PieceType.FrontBishop:
-                return isAIFirst ? "BackBishopPromoted" : "FrontBishopPromoted";
-            case PieceType.FrontRook:
-                return isAIFirst ? "BackRookPromoted" : "FrontRookPromoted";
-            default:
-                throw new Exception("成れない駒です。");
         }
     }
 
