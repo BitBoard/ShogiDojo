@@ -3,7 +3,6 @@ using UniRx;
 public class PieceModel
 {
 	private ReactiveProperty<PieceType> _pieceType;
-	private ReactiveProperty<bool> _isFront;
 	private ReactiveProperty<PieceData.PiecePosition> _piecePosition;
 	private ReactiveProperty<bool> _isShowOutline;
 	private ReactiveProperty<int> _pieceNum;
@@ -16,7 +15,6 @@ public class PieceModel
 	public PieceModel()
 	{
 		_pieceType = new ReactiveProperty<PieceType>();
-		_isFront = new ReactiveProperty<bool>();
 		_piecePosition = new ReactiveProperty<PieceData.PiecePosition>();
 		_isShowOutline = new ReactiveProperty<bool>();
 		_pieceNum = new ReactiveProperty<int>();

@@ -24,14 +24,10 @@ public class GameSceneController : MonoBehaviour
     private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
 
-    private void Awake()
-	{
-		Init();
-	}
-	
 	private async void Start()
-    {
-       await InitBoard();
+    { 
+	    Init(); 
+	    await InitBoard();
 	}
 
 	private void Init()
@@ -166,6 +162,9 @@ public class GameSceneController : MonoBehaviour
 		}
     }
 
+	/// <summary>
+	/// 盤上の駒を全て消去する
+	/// </summary>
 	private void ClearPieces()
 	{
 		foreach (var cell in cells)
@@ -234,6 +233,7 @@ public class GameSceneController : MonoBehaviour
 			{
 				Debug.Log("不正な手です");
 				isPieceSelected = false;
+				selectedPiece.SetIsShowOutline(false);
 				selectedPiece = null;
 				return;
 			}
@@ -284,6 +284,7 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log("移動した駒:" + selectedPiece.ToString());
 		
 		isPieceSelected = false;
+		selectedPiece.SetIsShowOutline(false);
 		selectedPiece = null;
 		isBlackTurn = !isBlackTurn;
 
