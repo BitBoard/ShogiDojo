@@ -38,10 +38,10 @@ public class Piece : MonoBehaviour, IPointerClickHandler
         var pieceTypeNum = (int) pieceType;
         if (isBlackTurn)
         {
-            return pieceTypeNum >= 9;
+            return pieceTypeNum < 15;
         }
         
-        return pieceTypeNum < 9;
+        return pieceTypeNum >= 15;
     }
 
     public bool IsCaptured()

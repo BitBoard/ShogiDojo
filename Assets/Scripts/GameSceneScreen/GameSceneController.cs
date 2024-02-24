@@ -482,8 +482,8 @@ public class GameSceneController : MonoBehaviour
 	private void PromotePiece(Piece piece, bool isAIFirst)
 	{
 		piece.isPromoted = true;
-		piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType, isAIFirst));
-	}
+        piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToPromoteStr(piece.pieceType, isAIFirst));
+    }
 	
 	/// <summary>
 	/// 盤上の駒を取得する

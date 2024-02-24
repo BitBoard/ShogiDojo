@@ -21,165 +21,120 @@ public partial class PieceData {
         // 例: "white_pawn" -> PieceType.WhitePawn
         switch (pieceTypeStr)
         {
-            case "white_pawn":
-                return PieceType.WhitePawn;
-            case "white_lance":
-                return PieceType.WhiteLance;
-            case "white_knight":
-                return PieceType.WhiteKnight;
-            case "white_silver":
-                return PieceType.WhiteSilver;
-            case "white_gold":
-                return PieceType.WhiteGold;
-            case "white_bishop":
-                return PieceType.WhiteBishop;
-            case "white_rook":
-                return PieceType.WhiteRook;
-            case "white_king":
-                return PieceType.WhiteKing;
-            case "black_pawn":
-                return PieceType.BlackPawn;
-            case "black_lance":
-                return PieceType.BlackLance;
-            case "black_knight":
-                return PieceType.BlackKnight;
-            case "black_silver":
-                return PieceType.BlackSilver;
-            case "black_gold":
-                return PieceType.BlackGold;
-            case "black_bishop":
-                return PieceType.BlackBishop;
-            case "black_rook":
-                return PieceType.BlackRook;
-            case "black_king":
-                return PieceType.BlackKing;
+            case "BackPawn":
+                return PieceType.BackPawn;
+            case "BackLance":
+                return PieceType.BackLance;
+            case "BackKnight":
+                return PieceType.BackKnight;
+            case "BackSilver":
+                return PieceType.BackSilver;
+            case "BackGold":
+                return PieceType.BackGold;
+            case "BackBishop":
+                return PieceType.BackBishop;
+            case "BackRook":
+                return PieceType.BackRook;
+            case "BackKing":
+                return PieceType.BackKing;
+            case "FrontPawn":
+                return PieceType.FrontPawn;
+            case "FrontLance":
+                return PieceType.FrontLance;
+            case "FrontKnight":
+                return PieceType.FrontKnight;
+            case "FrontSilver":
+                return PieceType.FrontSilver;
+            case "FrontGold":
+                return PieceType.FrontGold;
+            case "FrontBishop":
+                return PieceType.FrontBishop;
+            case "FrontRook":
+                return PieceType.FrontRook;
+            case "FrontKing":
+                return PieceType.FrontKing;
             default:
                 return PieceType.None;
         }
     }
-    
+
+    // ここでPieceTypeから文字列に変換する
     public static string PieceTypeToStr(PieceType pieceType, bool isAIFirst)
     {
-        // ここでPieceTypeから文字列に変換する
-        // 例: PieceType.WhitePawn -> "white_pawn"
         switch (pieceType)
         {
-            case PieceType.WhitePawn:
-                return isAIFirst ? "white_pawn" : "black_pawn";
-            case PieceType.WhiteLance:
-                return isAIFirst ? "white_lance" : "black_lance";
-            case PieceType.WhiteKnight:
-                return isAIFirst ? "white_knight" : "black_knight";
-            case PieceType.WhiteSilver:
-                return isAIFirst ? "white_silver" : "black_silver";
-            case PieceType.WhiteGold:
-                return isAIFirst ? "white_gold" : "black_gold";
-            case PieceType.WhiteBishop:
-                return isAIFirst ? "white_bishop" : "black_bishop";
-            case PieceType.WhiteRook:
-                return isAIFirst ? "white_rook" : "black_rook";
-            case PieceType.WhiteKing:
-                return isAIFirst ? "white_king" : "black_king";
-            case PieceType.BlackPawn:
-                return isAIFirst ? "black_pawn" : "white_pawn";
-            case PieceType.BlackLance:
-                return isAIFirst ? "black_lance" : "white_lance";
-            case PieceType.BlackKnight:
-                return isAIFirst ? "black_knight" : "white_knight";
-            case PieceType.BlackSilver:
-                return isAIFirst ? "black_silver" : "white_silver";
-            case PieceType.BlackGold:
-                return isAIFirst ? "black_gold" : "white_gold";
-            case PieceType.BlackBishop:
-                return isAIFirst ? "black_bishop" : "white_bishop";
-            case PieceType.BlackRook:
-                return isAIFirst ? "black_rook" : "white_rook";
-            case PieceType.BlackKing:
-                return isAIFirst ? "black_king" : "white_king";
+            case PieceType.BackPawn:
+                return isAIFirst ? "BackPawn" : "FrontPawn";
+            case PieceType.BackLance:
+                return isAIFirst ? "BackLance" : "FrontLance";
+            case PieceType.BackKnight:
+                return isAIFirst ? "BackKnight" : "FrontKnight";
+            case PieceType.BackSilver:
+                return isAIFirst ? "BackSilver" : "FrontSilver";
+            case PieceType.BackGold:
+                return isAIFirst ? "BackGold" : "FrontGold";
+            case PieceType.BackBishop:
+                return isAIFirst ? "BackBishop" : "FrontBishop";
+            case PieceType.BackRook:
+                return isAIFirst ? "BackRook" : "FrontRook";
+            case PieceType.BackKing:
+                return isAIFirst ? "BackKing" : "FrontKing";
+            case PieceType.FrontPawn:
+                return isAIFirst ? "FrontPawn" : "BackPawn";
+            case PieceType.FrontLance:
+                return isAIFirst ? "FrontLance" : "BackLance";
+            case PieceType.FrontKnight:
+                return isAIFirst ? "FrontKnight" : "BackKnight";
+            case PieceType.FrontSilver:
+                return isAIFirst ? "FrontSilver" : "BackSilver";
+            case PieceType.FrontGold:
+                return isAIFirst ? "FrontGold" : "BackGold";
+            case PieceType.FrontBishop:
+                return isAIFirst ? "FrontBishop" : "BackBishop";
+            case PieceType.FrontRook:
+                return isAIFirst ? "FrontRook" : "BackRook";
+            case PieceType.FrontKing:
+                return isAIFirst ? "FrontKing" : "BackKing";
             default:
-                return "none";
+                return "None";
         }
     }
 
-    /// <summary>
-    /// 成駒の文字列を取得する
-    /// </summary>
-    /// <param name="pieceType"></param>
-    /// <returns></returns>
+    // <summary>
+    // 成駒の文字列を取得する
+    // </summary>
+    // <param name="pieceType"></param>
+    // <returns></returns>
     public static string PieceTypeToPromoteStr(PieceType pieceType, bool isAIFirst)
     {
         switch (pieceType)
         {
-            case PieceType.WhitePawn:
-                return isAIFirst? "black_prom_pawn" : "white_prom_pawn";
-            case PieceType.WhiteLance:
-                return isAIFirst ? "black_prom_lance" : "white_prom_lance";
-            case PieceType.WhiteKnight:
-                return isAIFirst ? "black_prom_knight" : "white_prom_knight";
-            case PieceType.WhiteSilver:
-                return isAIFirst ? "black_prom_silver" : "white_prom_silver";
-            case PieceType.WhiteBishop:
-                return isAIFirst ? "black_horse" : "white_horse";
-            case PieceType.WhiteRook:
-                return isAIFirst ? "black_dragon" : "white_dragon";
-            case PieceType.BlackPawn:
-                return isAIFirst ? "white_prom_pawn" : "black_prom_pawn";
-            case PieceType.BlackLance:
-                return isAIFirst ? "white_prom_lance" : "black_prom_lance";
-            case PieceType.BlackKnight:
-                return isAIFirst ? "white_prom_knight" : "black_prom_knight";
-            case PieceType.BlackSilver:
-                return isAIFirst ? "white_prom_silver" : "black_prom_silver";
-            case PieceType.BlackBishop:
-                return isAIFirst ? "white_horse" : "black_horse";
-            case PieceType.BlackRook:
-                return isAIFirst ? "white_dragon" : "black_dragon";
+            case PieceType.BackPawn:
+                return isAIFirst ? "FrontPawnPromoted" : "BackPawnPromoted";
+            case PieceType.BackLance:
+                return isAIFirst ? "FrontLancePromoted" : "BackLancePromoted";
+            case PieceType.BackKnight:
+                return isAIFirst ? "FrontKnightPromoted" : "BackKnightPromoted";
+            case PieceType.BackSilver:
+                return isAIFirst ? "FrontSilverPromoted" : "BackSilverPromoted";
+            case PieceType.BackBishop:
+                return isAIFirst ? "FrontBishopPromoted" : "BackBishopPromoted";
+            case PieceType.BackRook:
+                return isAIFirst ? "FrontRookPromoted" : "BackRookPromoted";
+            case PieceType.FrontPawn:
+                return isAIFirst ? "BackPawnPromoted" : "FrontPawnPromoted";
+            case PieceType.FrontLance:
+                return isAIFirst ? "BackLancePromoted" : "FrontLancePromoted";
+            case PieceType.FrontKnight:
+                return isAIFirst ? "BackKnightPromoted" : "FrontKnightPromoted";
+            case PieceType.FrontSilver:
+                return isAIFirst ? "BackSilverPromoted" : "FrontSilverPromoted";
+            case PieceType.FrontBishop:
+                return isAIFirst ? "BackBishopPromoted" : "FrontBishopPromoted";
+            case PieceType.FrontRook:
+                return isAIFirst ? "BackRookPromoted" : "FrontRookPromoted";
             default:
                 throw new Exception("成れない駒です。");
-        }
-    }
-        
-    
-    public static PieceType GetCapturePieceType(PieceType pieceType)
-    {
-        // ここで取った駒を取ったプレイヤーの駒に変換する
-        // 例: PieceType.WhitePawn -> PieceType.BlackPawn
-        switch (pieceType)
-        {
-            case PieceType.WhitePawn:
-                return PieceType.BlackPawn;
-            case PieceType.WhiteLance:
-                return PieceType.BlackLance;
-            case PieceType.WhiteKnight:
-                return PieceType.BlackKnight;
-            case PieceType.WhiteSilver:
-                return PieceType.BlackSilver;
-            case PieceType.WhiteGold:
-                return PieceType.BlackGold;
-            case PieceType.WhiteBishop:
-                return PieceType.BlackBishop;
-            case PieceType.WhiteRook:
-                return PieceType.BlackRook;
-            case PieceType.WhiteKing:
-                return PieceType.BlackKing;
-            case PieceType.BlackPawn:
-                return PieceType.WhitePawn;
-            case PieceType.BlackLance:
-                return PieceType.WhiteLance;
-            case PieceType.BlackKnight:
-                return PieceType.WhiteKnight;
-            case PieceType.BlackSilver:
-                return PieceType.WhiteSilver;
-            case PieceType.BlackGold:
-                return PieceType.WhiteGold;
-            case PieceType.BlackBishop:
-                return PieceType.WhiteBishop;
-            case PieceType.BlackRook:
-                return PieceType.WhiteRook;
-            case PieceType.BlackKing:
-                return PieceType.WhiteKing;
-            default:
-                return PieceType.None;
         }
     }
 
@@ -188,25 +143,25 @@ public partial class PieceData {
         return isBlack ?
             new PieceType[]
             {
-                PieceType.BlackPawn,
-                PieceType.BlackLance,
-                PieceType.BlackKnight,
-                PieceType.BlackSilver,
-                PieceType.BlackGold,
-                PieceType.BlackBishop,
-                PieceType.BlackRook,
-                PieceType.BlackKing
+                PieceType.FrontPawn,
+                PieceType.FrontLance,
+                PieceType.FrontKnight,
+                PieceType.FrontSilver,
+                PieceType.FrontGold,
+                PieceType.FrontBishop,
+                PieceType.FrontRook,
+                PieceType.FrontKing,
             } :
             new PieceType[]
             {
-                PieceType.WhitePawn,
-                PieceType.WhiteLance,
-                PieceType.WhiteKnight,
-                PieceType.WhiteSilver,
-                PieceType.WhiteGold,
-                PieceType.WhiteBishop,
-                PieceType.WhiteRook,
-                PieceType.WhiteKing
+                PieceType.BackPawn,
+                PieceType.BackLance,
+                PieceType.BackKnight,
+                PieceType.BackSilver,
+                PieceType.BackGold,
+                PieceType.BackBishop,
+                PieceType.BackRook,
+                PieceType.BackKing,
             };
     }
 }
