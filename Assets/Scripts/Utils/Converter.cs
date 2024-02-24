@@ -61,111 +61,30 @@ public class Converter
         }
     }
 
-    /// <summary>
-    /// PieceTypeをMyShogiのPieceに変換する
-    /// </summary>
-    /// <param name="pieceType"></param>
-    /// <param name="isPromoted"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
-    public static MSPiece PieceTypeToPiece(PieceType pieceType, bool isPromoted)
-    {
-        if (isPromoted)
-        {
-            switch (pieceType)
-            {
-                case PieceType.BlackPawn:
-                    return MSPiece.B_PRO_PAWN;
-                case PieceType.BlackLance:
-                    return MSPiece.B_PRO_LANCE;
-                case PieceType.BlackKnight:
-                    return MSPiece.B_PRO_KNIGHT;
-                case PieceType.BlackSilver:
-                    return MSPiece.B_PRO_SILVER;
-                case PieceType.BlackRook:
-                    return MSPiece.B_DRAGON;
-                case PieceType.BlackBishop:
-                    return MSPiece.B_HORSE;
-                case PieceType.WhitePawn:
-                    return MSPiece.W_PRO_PAWN;
-                case PieceType.WhiteLance:
-                    return MSPiece.W_PRO_LANCE;
-                case PieceType.WhiteKnight:
-                    return MSPiece.W_PRO_KNIGHT;
-                case PieceType.WhiteSilver:
-                    return MSPiece.W_PRO_SILVER;
-                case PieceType.WhiteRook:
-                    return MSPiece.W_DRAGON;
-                case PieceType.WhiteBishop:
-                    return MSPiece.W_HORSE;
-                default:
-                    throw new Exception("Invalid piece type");
-            }
-        }
-
-        switch (pieceType)
-        {
-            case PieceType.BlackPawn:
-                return MSPiece.B_PAWN;
-            case PieceType.BlackLance:
-                return MSPiece.B_LANCE;
-            case PieceType.BlackKnight:
-                return MSPiece.B_KNIGHT;
-            case PieceType.BlackSilver:
-                return MSPiece.B_SILVER;
-            case PieceType.BlackGold:
-                return MSPiece.B_GOLD;
-            case PieceType.BlackRook:
-                return MSPiece.B_ROOK;
-            case PieceType.BlackBishop:
-                return MSPiece.B_BISHOP;
-            case PieceType.BlackKing:
-                return MSPiece.B_KING;
-            case PieceType.WhitePawn:
-                return MSPiece.W_PAWN;
-            case PieceType.WhiteLance:
-                return MSPiece.W_LANCE;
-            case PieceType.WhiteKnight:
-                return MSPiece.W_KNIGHT;
-            case PieceType.WhiteSilver:
-                return MSPiece.W_SILVER;
-            case PieceType.WhiteGold:
-                return MSPiece.W_GOLD;
-            case PieceType.WhiteRook:
-                return MSPiece.W_ROOK;
-            case PieceType.WhiteBishop:
-                return MSPiece.W_BISHOP;
-            case PieceType.WhiteKing:
-                return MSPiece.W_KING;
-            default:
-                throw new Exception("Invalid piece type");
-        }
-    }
-
     public static MSPiece PieceTypeToDropPiece(PieceType pieceType)
     {
         switch (pieceType)
         {
-            case PieceType.BlackPawn:
-            case PieceType.WhitePawn:
+            case PieceType.FrontPawn:
+            case PieceType.BackPawn:
                 return MSPiece.PAWN;
-            case PieceType.BlackLance:
-            case PieceType.WhiteLance:
+            case PieceType.FrontLance:
+            case PieceType.BackLance:
                 return MSPiece.LANCE;
-            case PieceType.BlackKnight:
-            case PieceType.WhiteKnight:
+            case PieceType.FrontKnight:
+            case PieceType.BackKnight:
                 return MSPiece.KNIGHT;
-            case PieceType.BlackSilver:
-            case PieceType.WhiteSilver:
+            case PieceType.FrontSilver:
+            case PieceType.BackSilver:
                 return MSPiece.SILVER;
-            case PieceType.BlackGold:
-            case PieceType.WhiteGold:
+            case PieceType.FrontGold:
+            case PieceType.BackGold:
                 return MSPiece.GOLD;
-            case PieceType.BlackBishop:
-            case PieceType.WhiteBishop:
+            case PieceType.FrontBishop:
+            case PieceType.BackBishop:
                 return MSPiece.BISHOP;
-            case PieceType.BlackRook:
-            case PieceType.WhiteRook:
+            case PieceType.FrontRook:
+            case PieceType.BackRook:
                 return MSPiece.ROOK;
             default:
                 throw new Exception("Invalid piece type");
@@ -177,19 +96,19 @@ public class Converter
         switch (piece)
         {
             case MSPiece.PAWN:
-                return isAIFirst ? PieceType.BlackPawn : PieceType.WhitePawn;
+                return isAIFirst ? PieceType.FrontPawn : PieceType.BackPawn;
             case MSPiece.LANCE:
-                return isAIFirst ? PieceType.BlackLance : PieceType.WhiteLance;
+                return isAIFirst ? PieceType.FrontLance : PieceType.BackLance;
             case MSPiece.KNIGHT:
-                return isAIFirst ? PieceType.BlackKnight : PieceType.WhiteKnight;
+                return isAIFirst ? PieceType.FrontKnight : PieceType.BackKnight;
             case MSPiece.SILVER:
-                return isAIFirst ? PieceType.BlackSilver : PieceType.WhiteSilver;
+                return isAIFirst ? PieceType.FrontSilver : PieceType.BackSilver;
             case MSPiece.GOLD:
-                return isAIFirst ? PieceType.BlackGold : PieceType.WhiteGold;
+                return isAIFirst ? PieceType.FrontGold : PieceType.BackGold;
             case MSPiece.BISHOP:
-                return isAIFirst ? PieceType.BlackBishop : PieceType.WhiteBishop;
+                return isAIFirst ? PieceType.FrontBishop : PieceType.BackBishop;
             case MSPiece.ROOK:
-                return isAIFirst ? PieceType.BlackRook : PieceType.WhiteRook;
+                return isAIFirst ? PieceType.FrontRook : PieceType.BackRook;
             default:
                 throw new Exception("Invalid piece type");
         }
