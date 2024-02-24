@@ -125,22 +125,6 @@ public class GameSceneController : MonoBehaviour
             var cellX = isAIFirst ? 8 - data.x : data.x;
             var cellY = isAIFirst ? 8 - data.y : data.y;
             var piece = Instantiate(piecePrefab, cells[cellY, cellX].transform);
-			if(isAIFirst)
-            {
-				var pieceType = "";
-				if (data.pieceType.Contains("white"))
-				{
-					pieceType = data.pieceType.Replace("white", "black");
-				} else
-				{
-                    pieceType = data.pieceType.Replace("black", "white");
-                }
-                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
-            }
-			else
-            {
-                piece.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + data.pieceType);
-            }
             piece.GetComponent<Piece>().SetPieceType(PieceData.StrToPieceType(data.pieceType));
 			piece.GetComponent<Piece>().SetPiecePosition(cellX, cellY);
             
@@ -397,7 +381,6 @@ public class GameSceneController : MonoBehaviour
                 if (pieceNum == 0) continue;
 
                 var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-                pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
                 pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
                 pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
                 pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
@@ -460,7 +443,6 @@ public class GameSceneController : MonoBehaviour
 			if(pieceNum == 0) continue;
 
             var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-            pieceByPrefab.GetComponent<Image>().sprite = Resources.Load<Sprite>("ShogiUI/Piece/" + PieceData.PieceTypeToStr(pt, IsPlayerBlack()));
             pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
             pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
             pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);

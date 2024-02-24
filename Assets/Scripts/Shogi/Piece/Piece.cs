@@ -1,4 +1,5 @@
-﻿using MyShogi.Model.Shogi.Core;
+﻿using System;
+using MyShogi.Model.Shogi.Core;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Events;
@@ -51,9 +52,46 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 	/// </summary>
 	public void Promotion()
 	{
-		switch (model.PieceType)
+		switch (model.PieceType.Value)
 		{
-			// 駒を成る処理を実装する
+			case PieceType.BackPawn:
+				SetPieceType(PieceType.BackPawnPromoted);
+				break;
+			case PieceType.BackLance:
+				SetPieceType(PieceType.BackLancePromoted);
+				break;
+			case PieceType.BackKnight:
+				SetPieceType(PieceType.BackKnightPromoted);
+				break;
+			case PieceType.BackSilver:
+				SetPieceType(PieceType.BackSilverPromoted);
+				break;
+			case PieceType.BackBishop:
+				SetPieceType(PieceType.BackBishopPromoted);
+				break;
+			case PieceType.BackRook:
+				SetPieceType(PieceType.BackRookPromoted);
+				break;
+			case PieceType.FrontPawn:
+				SetPieceType(PieceType.FrontPawnPromoted);
+				break;
+			case PieceType.FrontLance:
+				SetPieceType(PieceType.FrontLancePromoted);
+				break;
+			case PieceType.FrontKnight:
+				SetPieceType(PieceType.FrontKnightPromoted);
+				break;
+			case PieceType.FrontSilver:
+				SetPieceType(PieceType.FrontSilverPromoted);
+				break;
+			case PieceType.FrontBishop:
+				SetPieceType(PieceType.FrontBishopPromoted);
+				break;
+			case PieceType.FrontRook:
+				SetPieceType(PieceType.FrontRookPromoted);
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 	}
 	
@@ -135,8 +173,8 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 	private void UpdatePieceImage(PieceType pieceType)
 	{
 		// Managementクラスから駒の画像を取得して設定する
-		// var sprite = Management.Instance.GetPieceSprite(pieceType);
-		// view.SetImage(sprite);
+		var sprite = Management.Instance.GetPieceSprite(pieceType);
+		view.SetImage(sprite);
 	}
 
 	private void UpdatePieceNumText(int pieceNum)
