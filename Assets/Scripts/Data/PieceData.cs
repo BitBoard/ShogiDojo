@@ -3,12 +3,12 @@ using System.Collections;
 using UnityEngine;
 
 public partial class PieceData {
-    public class PiecePotition
+    public class PiecePosition
     {
         public int x;
         public int y;
 
-        public PiecePotition(int x, int y) 
+        public PiecePosition(int x, int y) 
         {
             this.x = x;
             this.y = y;
