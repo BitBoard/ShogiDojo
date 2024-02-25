@@ -92,7 +92,7 @@ public class CapturePieceAreaData
         }
     }
     
-    public void UpdateCapturePieceData(PieceType pieceType, bool isFront, bool isCaptured = false)
+    public void UpdateCapturePieceData(PieceType pieceType, bool isFront, bool isCaptured)
     {
         ICapturePieceNum capturePiece = isFront ? frontCapturePieceNum : backCapturePieceNum;
 
