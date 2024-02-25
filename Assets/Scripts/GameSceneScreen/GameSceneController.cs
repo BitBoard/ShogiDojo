@@ -273,7 +273,7 @@ public class GameSceneController : MonoBehaviour
 		isPieceSelected = false;
 		selectedPiece.SetIsShowOutline(false);
 		selectedPiece = null;
-		isBlackTurn = !isBlackTurn;
+		ChangeTurn();
 
 		// AIの手番の場合はAIの手を待つ
 		if (!IsPlayerTurn())
@@ -414,7 +414,7 @@ public class GameSceneController : MonoBehaviour
 		isPieceSelected = false;
 		selectedPiece.SetIsShowOutline(false);
 		selectedPiece = null;
-		isBlackTurn = !isBlackTurn;
+		ChangeTurn();
 		
 		// AIの手番の場合はAIの手を待つ
 		if (!IsPlayerTurn())
@@ -494,6 +494,14 @@ public class GameSceneController : MonoBehaviour
 		}
 		
 		return null;
+	}
+
+	/// <summary>
+	/// ターンの変更を行う
+	/// </summary>
+	private void ChangeTurn()
+	{
+		isBlackTurn = !isBlackTurn;
 	}
 	
 	private bool IsPlayerTurn()
