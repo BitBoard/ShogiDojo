@@ -47,7 +47,7 @@ public class PieceData {
         }
     }
 
-    public static PieceType[] getPieceTypeList(bool isBlack)
+    public static PieceType[] GetPieceTypeList(bool isBlack)
     {
         return isBlack ?
             new PieceType[]

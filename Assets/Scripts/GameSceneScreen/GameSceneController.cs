@@ -366,36 +366,10 @@ public class GameSceneController : MonoBehaviour
 
 		// 持ち駒が消費されていた場合は持ち駒情報を更新する
 		if(selectedPiece.IsCaptured()) {
-			capturePieceAreaData.UpdateCapturePieceData(selectedPiece.GetPieceType(), IsUpdateBlack(), selectedPiece.IsCaptured());
-            Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
+			UpdateCapturePieceArea(selectedPiece);
+
             // 駒数表示を非有効化
             selectedPiece.SetPieceNum(0);
-
-            var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
-
-            // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
-			view.ClearCapturePieceArea(capturePieceArea.transform);
-
-            // 駒台を更新
-            foreach (PieceType pt in PieceData.getPieceTypeList(IsUpdateBlack()))
-            {
-                var pieceNum = capturePieceAreaData.getPieceNum(pt, IsUpdateBlack());
-                if (pieceNum == 0) continue;
-
-                var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-                pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
-                pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
-                pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
-                pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
-                {
-                    if (!IsPlayerTurn())
-                    {
-                        return;
-                    }
-                    await SelectPiece(pieceByPrefab.GetComponent<Piece>());
-                });
-            };
-
         };
 
 		// 駒の位置を更新する
@@ -423,52 +397,25 @@ public class GameSceneController : MonoBehaviour
 		}
 	}
 
-	/// <summary>
-	/// 駒を取る処理
-	/// </summary>
-	/// <param name="piece"></param>
-	private void CapturePiece(Piece piece)
+/// <summary>
+/// 駒を取る処理
+/// </summary>
+/// <param name="piece"></param>
+    private void CapturePiece(Piece piece)
 	{
-		var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
-		var pieceType = piece.GetPieceType();
-		Debug.Log("取った駒:" + pieceType);
-
-		capturePieceAreaData.UpdateCapturePieceData(pieceType, IsUpdateBlack());
-        Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
-
-		// 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
-		view.ClearCapturePieceArea(capturePieceArea.transform);
-
-        foreach (PieceType pt in PieceData.getPieceTypeList(IsUpdateBlack()))
-        {
-			var pieceNum = capturePieceAreaData.getPieceNum(pt, IsUpdateBlack());
-			if(pieceNum == 0) continue;
-
-            var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
-            pieceByPrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
-            pieceByPrefab.GetComponent<Piece>().SetPieceType(pt);
-            pieceByPrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
-            pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
-            {
-                if (!IsPlayerTurn())
-                {
-                    return;
-                }
-                await SelectPiece(pieceByPrefab.GetComponent<Piece>());
-            });
-        };
+		UpdateCapturePieceArea(piece);
 
         // 取った駒を消去する
         Destroy(piece.gameObject);
-	}
+    }
 
-	/// <summary>
-	/// 盤上の駒を取得する
-	/// </summary>
-	/// <param name="x"></param>
-	/// <param name="y"></param>
-	/// <returns></returns>
-	private Piece GetPieceOnBoard(int x, int y)
+    /// <summary>
+    /// 盤上の駒を取得する
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <returns></returns>
+    private Piece GetPieceOnBoard(int x, int y)
 	{
 		var cell = cells[y, x];
 		var piece = cell.GetComponentInChildren<Piece>();
@@ -578,6 +525,42 @@ public class GameSceneController : MonoBehaviour
 		shouldPromote = false;
 		promoteSelectionDone = false;
 	}
+
+	private void UpdateCapturePieceArea(Piece piece)
+	{
+		// 持ち駒情報を更新
+		capturePieceAreaData.UpdateCapturePieceData(piece.GetPieceType(), IsUpdateBlack(), selectedPiece.IsCaptured());
+        Debug.Log("持ち駒情報の更新 \n" + capturePieceAreaData);
+
+        var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
+
+        // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
+        view.ClearCapturePieceArea(capturePieceArea.transform);
+
+        // 駒台の表示を最新化
+        UpdateCapturePieceAreaUI(capturePieceArea);
+    }
+
+	private void UpdateCapturePieceAreaUI(GameObject capturePieceArea)
+    {
+        // 駒台を更新
+        foreach (PieceType pt in PieceData.GetPieceTypeList(IsUpdateBlack()))
+        {
+            var pieceNum = capturePieceAreaData.GetPieceNum(pt, IsUpdateBlack());
+            if (pieceNum == 0) continue;
+
+            var pieceByPrefab = Instantiate(piecePrefab, capturePieceArea.transform);
+			capturePieceAreaData.CreateCapturePiece(pieceNum, pt, pieceByPrefab);
+            pieceByPrefab.GetComponent<Piece>().OnClickAction += UniTask.UnityAction(async () =>
+            {
+                if (!IsPlayerTurn())
+                {
+                    return;
+                }
+                await SelectPiece(pieceByPrefab.GetComponent<Piece>());
+            });
+        };
+    }
 
 	public void OpenDebugMenu()
 	{
