@@ -296,19 +296,19 @@ public class GameSceneController : MonoBehaviour
 				selectedPiece.SetPiecePosition(pos.x, pos.y);
 				break;
 			case Cell cellObject:
-				// 選択されている駒を移動させる
-				selectedPiece.transform.SetParent(cellObject.transform);
-				// 駒の位置を更新する
-				selectedPiece.transform.localPosition = Vector3.zero;
-				selectedPiece.SetPiecePosition(cellObject.x, cellObject.y);
-				// 持ち駒が消費されていた場合は持ち駒情報を更新する
-				if(selectedPiece.IsCaptured())
-				{
-					UpdateCapturePieceArea(selectedPiece);
+                // 選択されている駒を移動させる
+                selectedPiece.transform.SetParent(cellObject.transform);
+                // 持ち駒が消費されていた場合は持ち駒情報を更新する
+                if (selectedPiece.IsCaptured())
+                {
+                    UpdateCapturePieceArea(selectedPiece);
 
-					// 駒数表示を非有効化
-					selectedPiece.SetPieceNum(0);
-				}
+                    // 駒数表示を非有効化
+                    selectedPiece.SetPieceNum(0);
+                }
+                // 駒の位置を更新する
+                selectedPiece.transform.localPosition = Vector3.zero;
+				selectedPiece.SetPiecePosition(cellObject.x, cellObject.y);
 				break;
 		}
 		
