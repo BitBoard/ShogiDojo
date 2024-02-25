@@ -165,6 +165,31 @@ public class GameSceneController : MonoBehaviour
 	}
 	
 	/// <summary>
+	/// 駒を選択状態にする
+	/// </summary>
+	/// <param name="piece"></param>
+	private void SetSelectedPiece(Piece piece)
+	{
+		selectedPiece = piece;
+		selectedPiece.SetIsShowOutline(true);
+		isPieceSelected = true;
+		Debug.Log("選択した駒:" + piece);
+	}
+	
+	/// <summary>
+	/// 駒の選択状態を解除する
+	/// </summary>
+	private void ClearSelectedPiece()
+	{
+		if (selectedPiece != null)
+		{
+			isPieceSelected = false;
+			selectedPiece.SetIsShowOutline(false);
+			selectedPiece = null;
+		}
+	}
+	
+	/// <summary>
 	/// 駒を選択する処理
 	/// note: 相手の駒を取る時はこちらの処理が呼ばれる
 	/// </summary>
@@ -181,10 +206,7 @@ public class GameSceneController : MonoBehaviour
 				return;
 			}
 			// 駒を選択する
-			selectedPiece = piece;
-			selectedPiece.SetIsShowOutline(true);
-			isPieceSelected = true;
-			Debug.Log("選択した駒:" + piece);
+			SetSelectedPiece(piece);
 			return;
 		}
 
@@ -192,9 +214,7 @@ public class GameSceneController : MonoBehaviour
 		if (selectedPiece.IsCaptured())
 		{
 			Debug.Log("不正な手です");
-			isPieceSelected = false;
-			selectedPiece.SetIsShowOutline(false);
-			selectedPiece = null;
+			ClearSelectedPiece();
 			return;
 		}
 		
@@ -219,9 +239,7 @@ public class GameSceneController : MonoBehaviour
 			else
 			{
 				Debug.Log("不正な手です");
-				isPieceSelected = false;
-				selectedPiece.SetIsShowOutline(false);
-				selectedPiece = null;
+				ClearSelectedPiece();
 				return;
 			}
 		}
@@ -270,9 +288,7 @@ public class GameSceneController : MonoBehaviour
 		
 		Debug.Log("移動した駒:" + selectedPiece);
 		
-		isPieceSelected = false;
-		selectedPiece.SetIsShowOutline(false);
-		selectedPiece = null;
+		ClearSelectedPiece();
 		ChangeTurn();
 
 		// AIの手番の場合はAIの手を待つ
@@ -329,9 +345,7 @@ public class GameSceneController : MonoBehaviour
 			else
 			{
 				Debug.Log("不正な手です");
-				isPieceSelected = false;
-				selectedPiece.SetIsShowOutline(false);
-				selectedPiece = null;
+				ClearSelectedPiece();
 				return;
 			}
 		}
@@ -411,9 +425,7 @@ public class GameSceneController : MonoBehaviour
 
 		Debug.Log("移動した駒:" + selectedPiece);
 		
-		isPieceSelected = false;
-		selectedPiece.SetIsShowOutline(false);
-		selectedPiece = null;
+		ClearSelectedPiece();
 		ChangeTurn();
 		
 		// AIの手番の場合はAIの手を待つ
