@@ -282,12 +282,13 @@ public class GameSceneController : MonoBehaviour
 		// 駒音を再生する
 		selectedPiece.GetComponent<AudioSource>().Play();
 		
+		Debug.Log("移動した駒:" + selectedPiece);
+		
 		// 局面を進める
 		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
 		
-		Debug.Log("移動した駒:" + selectedPiece);
-		
+		// 着手後処理
 		ClearSelectedPiece();
 		ChangeTurn();
 
@@ -418,13 +419,14 @@ public class GameSceneController : MonoBehaviour
 
         // 駒音を再生する
         selectedPiece.GetComponent<AudioSource>().Play();
+        
+        Debug.Log("移動した駒:" + selectedPiece);
 		
 		// 局面を進める
 		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
-
-		Debug.Log("移動した駒:" + selectedPiece);
 		
+		// 着手後処理
 		ClearSelectedPiece();
 		ChangeTurn();
 		
