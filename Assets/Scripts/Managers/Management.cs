@@ -10,17 +10,7 @@ public class Management : SingletonMonoBehaviour<Management>
 	// 駒の画像を保存するDictionary
 	private Dictionary<PieceType, Sprite> pieceSprites = new Dictionary<PieceType, Sprite>();
 
-
-	private void InitPieceSpritesDictionary() 
-	{
-		foreach (PieceType pieceType in Enum.GetValues(typeof(PieceType)))
-		{
-			pieceSprites[pieceType] = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType.ToString());
-        }
-	}
-
-
-    protected override void doAwake()
+	protected override void doAwake()
 	{
 		Init();
 	}
@@ -30,6 +20,14 @@ public class Management : SingletonMonoBehaviour<Management>
 		Initializer.Init(); // ゲームが始まる時に一回だけ呼ぶ
 		InitPieceSpritesDictionary(); // ゲーム開始時に一回だけ駒の画像を読み込む
         Debug.Log("Management初期化完了");
+	}
+	
+	private void InitPieceSpritesDictionary() 
+	{
+		foreach (PieceType pieceType in Enum.GetValues(typeof(PieceType)))
+		{
+			pieceSprites[pieceType] = Resources.Load<Sprite>("ShogiUI/Piece/" + pieceType);
+		}
 	}
 
 	public Sprite GetPieceSprite(PieceType pieceType)

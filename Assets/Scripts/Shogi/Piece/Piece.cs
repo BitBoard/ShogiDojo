@@ -91,7 +91,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 				SetPieceType(PieceType.FrontRookPromoted);
 				break;
 			default:
-				throw new ArgumentOutOfRangeException();
+				throw new Exception("成れない駒です");
 		}
 	}
 	
@@ -166,8 +166,7 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 
 	public override string ToString()
 	{
-		return Converter.PosToSign(model.PiecePosition.Value.x, model.PiecePosition.Value.y) + " " + model.PieceType.Value +
-			   " x:" + model.PiecePosition.Value.x + " y:" + model.PiecePosition.Value.y;
+		return "pieceType:" + model.PieceType.Value + " x:" + model.PiecePosition.Value.x + " y:" + model.PiecePosition.Value.y;
 	}
 
 	private void UpdatePieceImage(PieceType pieceType)

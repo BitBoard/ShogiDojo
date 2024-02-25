@@ -99,6 +99,12 @@ public class GameSceneController : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// 盤面の初期化を行う
+	/// </summary>
+	/// <param name="boardJsonPath"></param>
+	/// <param name="boardType"></param>
+	/// <param name="isAIFirst"></param>
 	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isAIFirst = false)
     {
         ClearPieces();
@@ -109,7 +115,7 @@ public class GameSceneController : MonoBehaviour
         gameState = new GameState(boardType);
         gameState.ShowBoard();
         battleAI = new RandomAI();
-        this.isBlackTurn = true;
+        isBlackTurn = true;
 		this.isAIFirst = isAIFirst;
 
         if (String.IsNullOrEmpty(boardJsonPath))
@@ -181,7 +187,7 @@ public class GameSceneController : MonoBehaviour
 			selectedPiece = piece;
 			selectedPiece.SetIsShowOutline(true);
 			isPieceSelected = true;
-			Debug.Log("選択した駒:" + piece.ToString());
+			Debug.Log("選択した駒:" + piece);
 			return;
 		}
 
@@ -265,7 +271,7 @@ public class GameSceneController : MonoBehaviour
 		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
 		
-		Debug.Log("移動した駒:" + selectedPiece.ToString());
+		Debug.Log("移動した駒:" + selectedPiece);
 		
 		isPieceSelected = false;
 		selectedPiece.SetIsShowOutline(false);
@@ -284,7 +290,6 @@ public class GameSceneController : MonoBehaviour
 	/// note: 持ち駒を動かす場合は必ずこちらの処理が呼ばれる
 	/// </summary>
 	/// <param name="cell"></param>
-	/// <param name="isBlack"></param>
 	private async UniTask MovePiece(Cell cell)
 	{
 		if (!isPieceSelected)
@@ -407,7 +412,7 @@ public class GameSceneController : MonoBehaviour
 		gameState.Advance(decidedMove);
 		gameState.ShowBoard();
 
-		Debug.Log("移動した駒:" + selectedPiece.ToString());
+		Debug.Log("移動した駒:" + selectedPiece);
 		
 		isPieceSelected = false;
 		selectedPiece.SetIsShowOutline(false);
@@ -477,7 +482,6 @@ public class GameSceneController : MonoBehaviour
 	/// 駒台の駒を取得する
 	/// </summary>
 	/// <param name="pieceType"></param>
-	/// <param name="isBlack"></param>
 	/// <returns></returns>
 	private Piece GetCapturedPiece(PieceType pieceType)
 	{

@@ -1,6 +1,6 @@
 public static class GameConfig
 {
-	public static bool isPlayerFirst = true;
+	public static bool isAIFirst = false;
 	public static string initialBoardJsonPath = "Data/initial-board";
     public static string boardDropLeftLanceJsonPath = "Data/board-drop-left-lance";
     public static string boardDropRightLanceJsonPath = "Data/board-drop-right-lance";
