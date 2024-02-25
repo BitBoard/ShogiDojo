@@ -10,9 +10,9 @@ public class GameSceneController : MonoBehaviour
 	[SerializeField] private GameSceneView view;
 	[SerializeField] private GameObject piecePrefab;
 	[SerializeField] private ConfigPopupController configPopupController;
-    private int boardSize = 81;
-    private int boardColumns = 9;
-    private int boardRows = 9;
+    private const int boardSize = 81;
+    private const int boardColumns = 9;
+    private const int boardRows = 9;
     private Cell[,] cells;
     private Piece selectedPiece = null;
     private bool isPieceSelected = false;
@@ -371,7 +371,7 @@ public class GameSceneController : MonoBehaviour
             // 駒数表示を非有効化
             selectedPiece.SetPieceNum(0);
 
-            var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+            var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
 
             // 最新のcapturePieceAreaDataを反映する前に古い持ち駒の表示を削除
 			view.ClearCapturePieceArea(capturePieceArea.transform);
@@ -429,7 +429,7 @@ public class GameSceneController : MonoBehaviour
 	/// <param name="piece"></param>
 	private void CapturePiece(Piece piece)
 	{
-		var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
 		var pieceType = piece.GetPieceType();
 		Debug.Log("取った駒:" + pieceType);
 
@@ -482,7 +482,7 @@ public class GameSceneController : MonoBehaviour
 	/// <returns></returns>
 	private Piece GetCapturedPiece(PieceType pieceType)
 	{
-		var capturePieceArea = IsPlayerTurn() ? view.BlackCapturePieceArea : view.WhiteCapturePieceArea;
+		var capturePieceArea = IsPlayerTurn() ? view.FrontCapturePieceArea : view.BackCapturePieceArea;
 		// 駒台にある駒で指定されたPieceTypeのものを取得
 		var pieceList = capturePieceArea.GetComponentsInChildren<Piece>();
 		foreach (var piece in pieceList)

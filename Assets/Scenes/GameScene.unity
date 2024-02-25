@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3133,8 +3133,8 @@ MonoBehaviour:
   closeDebugMenuButton: {fileID: 602597099}
   debugMenu: {fileID: 1669750323}
   board: {fileID: 1796256012}
-  blackCapturePieceArea: {fileID: 1559258711}
-  whiteCapturePieceArea: {fileID: 806005642}
+  frontCapturePieceArea: {fileID: 1559258711}
+  backCapturePieceArea: {fileID: 806005642}
   promotePopupView: {fileID: 10991509}
 --- !u!1001 &487421259
 PrefabInstance:
@@ -6475,7 +6475,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 585343976629387721, guid: 95f73675a70b510479b5a5ae2faed57e, type: 3}
       propertyPath: m_Name
-      value: SecondKomadai
+      value: BackKomadai
       objectReference: {fileID: 0}
     - target: {fileID: 8588339867315424625, guid: 95f73675a70b510479b5a5ae2faed57e, type: 3}
       propertyPath: m_Pivot.x
@@ -13633,7 +13633,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 585343976629387721, guid: 95f73675a70b510479b5a5ae2faed57e, type: 3}
       propertyPath: m_Name
-      value: FirstKomadai
+      value: FrontKomadai
       objectReference: {fileID: 0}
     - target: {fileID: 8588339867315424625, guid: 95f73675a70b510479b5a5ae2faed57e, type: 3}
       propertyPath: m_Pivot.x

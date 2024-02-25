@@ -100,18 +100,26 @@ public class CapturePieceAreaData
         {
             case PieceType.FrontPawn:
             case PieceType.BackPawn:
+            case PieceType.FrontPawnPromoted:
+            case PieceType.BackPawnPromoted:
                 capturePiece.pawn += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontLance:
             case PieceType.BackLance:
+            case PieceType.FrontLancePromoted:
+            case PieceType.BackLancePromoted:
                 capturePiece.lance += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontKnight:
             case PieceType.BackKnight:
+            case PieceType.FrontKnightPromoted:
+            case PieceType.BackKnightPromoted:
                 capturePiece.knight += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontSilver:
             case PieceType.BackSilver:
+            case PieceType.FrontSilverPromoted:
+            case PieceType.BackSilverPromoted:
                 capturePiece.silver += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontGold:
@@ -120,10 +128,14 @@ public class CapturePieceAreaData
                 break;
             case PieceType.FrontBishop:
             case PieceType.BackBishop:
+            case PieceType.FrontBishopPromoted:
+            case PieceType.BackBishopPromoted:
                 capturePiece.bishop += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontRook:
             case PieceType.BackRook:
+            case PieceType.FrontRookPromoted:
+            case PieceType.BackRookPromoted:
                 capturePiece.rook += isCaptured ? -1 : 1;
                 break;
             case PieceType.FrontKing:
