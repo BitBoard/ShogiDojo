@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 /// <summary>
 /// 駒の振る舞いを定義するクラス
 /// </summary>
-public class Piece : MonoBehaviour, IPointerClickHandler
+public class Piece : MonoBehaviour, IPointerClickHandler, ISelectableTarget
 {
 	[SerializeField] private PieceView view;
 	private PieceModel model;

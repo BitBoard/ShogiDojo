@@ -15,7 +15,6 @@ public class GameSceneController : MonoBehaviour
     private const int boardRows = 9;
     private Cell[,] cells;
     private Piece selectedPiece = null;
-    private bool isPieceSelected = false;
     private GameState gameState;
     private IShogiAI battleAI;
     private bool isBlackTurn = true;
@@ -107,7 +106,6 @@ public class GameSceneController : MonoBehaviour
         ClearPieces();
 		view.ClearAllCapturePieceArea();
         capturePieceAreaData = new CapturePieceAreaData();
-        isPieceSelected = false;
         selectedPiece = null;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
@@ -172,7 +170,6 @@ public class GameSceneController : MonoBehaviour
 	{
 		selectedPiece = piece;
 		selectedPiece.SetIsShowOutline(true);
-		isPieceSelected = true;
 		Debug.Log("選択した駒:" + piece);
 	}
 	
@@ -183,10 +180,14 @@ public class GameSceneController : MonoBehaviour
 	{
 		if (selectedPiece != null)
 		{
-			isPieceSelected = false;
 			selectedPiece.SetIsShowOutline(false);
 			selectedPiece = null;
 		}
+	}
+
+	private async UniTask HandlePiece(ISelectableTarget target)
+	{
+		
 	}
 	
 	/// <summary>
@@ -306,7 +307,7 @@ public class GameSceneController : MonoBehaviour
 	/// <param name="cell"></param>
 	private async UniTask MovePiece(Cell cell)
 	{
-		if (!isPieceSelected)
+		if (selectedPiece == null)
 		{
 			return;
 		}
@@ -552,7 +553,6 @@ public class GameSceneController : MonoBehaviour
 		var toY = Converter.SquareToY(to);
 
 		Debug.Log("fromX:" + fromX + " fromY:" + fromY + " toX:" + toX + " toY:" + toY);
-		isPieceSelected = true;
 
 		// AIが先手の場合は座標を反転させる
 		if(!IsPlayerBlack())
