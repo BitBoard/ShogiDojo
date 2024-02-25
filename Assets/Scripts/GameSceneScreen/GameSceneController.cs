@@ -185,9 +185,144 @@ public class GameSceneController : MonoBehaviour
 		}
 	}
 
-	private async UniTask HandlePiece(ISelectableTarget target)
+	/// <summary>
+	/// 駒またはマスをクリックした時の処理
+	/// </summary>
+	/// <param name="target"></param>
+	private async UniTask OnClickTarget(ISelectableTarget target)
 	{
+		// 選択されている駒がない場合
+		if (selectedPiece == null)
+		{
+			// targetが駒の場合
+			if (target is Piece piece)
+			{
+				if (!piece.IsTurnPlayerPiece(isBlackTurn))
+				{
+					Debug.Log("自分の駒を選択してください");
+					return;
+				}
+				// 駒を選択する
+				SetSelectedPiece(piece);
+			}
+			
+			return;
+		}
 		
+		// 駒が選択されている場合、合法手かどうかの判定に入る
+		Move move = Move.NONE;
+		Move movePromote = Move.NONE;
+		Move decidedMove = Move.NONE;
+
+		// 持ち駒を打つ場合
+		if (selectedPiece.IsCaptured())
+		{
+			// 持ち駒を他の駒がある位置に置こうとした場合
+			if (target is Piece)
+			{
+				Debug.Log("不正な手です");
+				ClearSelectedPiece();
+				return;
+			}
+			var pt = Converter.PieceTypeToDropPiece(selectedPiece.GetPieceType());
+			var to = target.SqPos();
+			move = Util.MakeMoveDrop(pt, to);
+			decidedMove = move;
+		}
+		else
+		{
+			// 盤上の駒を移動する場合
+			var from = selectedPiece.SqPos();
+			var to = target.SqPos();
+			move = Util.MakeMove(from, to);
+			movePromote = Util.MakeMovePromote(from, to);
+			decidedMove = move;
+		}
+		
+		// 合法手かどうかを判定する
+		Debug.Log("指し手:" + move.Pretty());
+		if (!gameState.IsValidMove(move))
+		{
+			// 成りが合法手の場合
+			if (gameState.IsValidMove(movePromote))
+			{
+				// この場合は強制的に成る
+				decidedMove = movePromote;
+				selectedPiece.Promotion();
+			}
+			else
+			{
+				Debug.Log("不正な手です");
+				ClearSelectedPiece();
+				return;
+			}
+		}
+		
+		// 成りも不成も選択できる場合
+		if (gameState.IsValidMove(move) && gameState.IsValidMove(movePromote))
+		{
+			// 成るかどうかを選択する
+			if (!promoteSelectionDone)
+			{
+				view.PromotePopupView.gameObject.SetActive(true);
+			}
+
+			// ここで待機する
+			await UniTask.WaitUntil(() => promoteSelectionDone);
+			
+			Debug.Log("成るかどうか:" + shouldPromote);
+			
+			if (shouldPromote)
+			{
+				decidedMove = movePromote;
+				selectedPiece.Promotion();
+			}
+			
+			// 変数を初期化
+			shouldPromote = false;
+			promoteSelectionDone = false;
+		}
+
+		switch (target)
+		{
+			case Piece pieceObject:
+				// 選択されている駒を移動させる
+				selectedPiece.transform.SetParent(pieceObject.transform.parent);
+				// 移動先のマスの駒を取る
+				CapturePiece(pieceObject);
+				// 駒の位置を更新する
+				selectedPiece.transform.localPosition = Vector3.zero;
+				var pos = pieceObject.GetPiecePosition();
+				selectedPiece.SetPiecePosition(pos.x, pos.y);
+				break;
+			case Cell cellObject:
+				// 選択されている駒を移動させる
+				selectedPiece.transform.SetParent(cellObject.transform);
+				// 駒の位置を更新する
+				selectedPiece.transform.localPosition = Vector3.zero;
+				selectedPiece.SetPiecePosition(cellObject.x, cellObject.y);
+				break;
+		}
+		
+		// 駒音を再生する
+		selectedPiece.GetComponent<AudioSource>().Play();
+		
+		Debug.Log("移動した駒:" + selectedPiece);
+		
+		// 局面を進める
+		gameState.Advance(decidedMove);
+		gameState.ShowBoard();
+		
+		// 着手後処理
+		ClearSelectedPiece();
+		ChangeTurn();
+
+		// AIの手番の場合はAIの手を待つ
+		if (!IsPlayerTurn())
+		{
+			await GetAIAction();
+		}
+
 	}
 	
 	/// <summary>
