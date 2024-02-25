@@ -189,7 +189,7 @@ public class GameSceneController : MonoBehaviour
 	/// 駒またはマスをクリックした時の処理
 	/// </summary>
 	/// <param name="target"></param>
-	private async UniTask OnClickTarget(ISelectableTarget target)
+	private async UniTask DoAction(ISelectableTarget target)
 	{
 		// 選択されている駒がない場合
 		if (selectedPiece == null)
