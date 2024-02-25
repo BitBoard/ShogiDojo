@@ -301,6 +301,14 @@ public class GameSceneController : MonoBehaviour
 				// 駒の位置を更新する
 				selectedPiece.transform.localPosition = Vector3.zero;
 				selectedPiece.SetPiecePosition(cellObject.x, cellObject.y);
+				// 持ち駒が消費されていた場合は持ち駒情報を更新する
+				if(selectedPiece.IsCaptured())
+				{
+					UpdateCapturePieceArea(selectedPiece);
+
+					// 駒数表示を非有効化
+					selectedPiece.SetPieceNum(0);
+				}
 				break;
 		}
 		
