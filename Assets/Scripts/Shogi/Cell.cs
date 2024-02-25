@@ -14,9 +14,9 @@ public class Cell : MonoBehaviour, IPointerClickHandler
 	public int y;
 	public UnityAction OnClickAction;
 	
-	public Square SqPos(bool isAIFirst)
+	public Square SqPos()
 	{
-        return Converter.PosToSquare(x, y, isAIFirst);
+        return Converter.PosToSquare(x, y);
     }
 
 

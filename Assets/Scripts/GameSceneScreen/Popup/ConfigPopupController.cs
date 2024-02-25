@@ -15,9 +15,8 @@ public class ConfigPopupController : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button firstPlayerButton;
     [SerializeField] private Button secondPlayerButton;
-    private bool isAIFirst = false;
 
-    public UnityAction<string, BoardType, bool> action;
+    public UnityAction<string, BoardType> action;
 
     private void Awake()
     {
@@ -96,7 +95,7 @@ public class ConfigPopupController : MonoBehaviour
                 boardType = BoardType.NoHandicap;
                 break;
         }
-        action.Invoke(boardJsonPath, boardType, isAIFirst);
+        action.Invoke(boardJsonPath, boardType);
         ClosePanel();
     }
 
@@ -108,7 +107,7 @@ public class ConfigPopupController : MonoBehaviour
 
     private void ChooseFirstPlayer()
     {
-        isAIFirst = false;
+        GameConfig.isAIFirst = false;
         firstPlayerButton.image.color = new Color32(101, 173, 211, 255);
         secondPlayerButton.image.color = new Color32(255, 255, 255, 255);
         firstPlayer.text = "▲先手";
@@ -117,7 +116,7 @@ public class ConfigPopupController : MonoBehaviour
 
     private void ChooseSecondPlayer()
     {
-        isAIFirst = true;
+        GameConfig.isAIFirst = true;
         firstPlayerButton.image.color = new Color32(255, 255, 255, 255);
         secondPlayerButton.image.color = new Color32(101, 173, 211, 255);
         firstPlayer.text = "△後手";
@@ -128,6 +127,7 @@ public class ConfigPopupController : MonoBehaviour
     {
         if (change.value == 0)
         {
+            GameConfig.isAIFirst = false;
             turnText.enabled = true;
             firstPlayerButton.gameObject.SetActive(true);
             secondPlayerButton.gameObject.SetActive(true);
@@ -136,12 +136,12 @@ public class ConfigPopupController : MonoBehaviour
         }
         else
         {
+            GameConfig.isAIFirst = true;
             turnText.enabled = false;
             firstPlayerButton.gameObject.SetActive(false);
             secondPlayerButton.gameObject.SetActive(false);
             firstPlayer.text = "△後手";
             secondPlayer.text = "▲先手";
-            isAIFirst = true;
         }
     }
 }

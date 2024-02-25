@@ -34,39 +34,39 @@ public class Converter
         }
     }
 
-    public static PieceType DropPieceToPieceType(MSPiece piece, bool isAIFirst)
+    public static PieceType DropPieceToPieceType(MSPiece piece)
     {
         switch (piece)
         {
             case MSPiece.PAWN:
-                return isAIFirst ? PieceType.FrontPawn : PieceType.BackPawn;
+                return GameConfig.isAIFirst ? PieceType.FrontPawn : PieceType.BackPawn;
             case MSPiece.LANCE:
-                return isAIFirst ? PieceType.FrontLance : PieceType.BackLance;
+                return GameConfig.isAIFirst ? PieceType.FrontLance : PieceType.BackLance;
             case MSPiece.KNIGHT:
-                return isAIFirst ? PieceType.FrontKnight : PieceType.BackKnight;
+                return GameConfig.isAIFirst ? PieceType.FrontKnight : PieceType.BackKnight;
             case MSPiece.SILVER:
-                return isAIFirst ? PieceType.FrontSilver : PieceType.BackSilver;
+                return GameConfig.isAIFirst ? PieceType.FrontSilver : PieceType.BackSilver;
             case MSPiece.GOLD:
-                return isAIFirst ? PieceType.FrontGold : PieceType.BackGold;
+                return GameConfig.isAIFirst ? PieceType.FrontGold : PieceType.BackGold;
             case MSPiece.BISHOP:
-                return isAIFirst ? PieceType.FrontBishop : PieceType.BackBishop;
+                return GameConfig.isAIFirst ? PieceType.FrontBishop : PieceType.BackBishop;
             case MSPiece.ROOK:
-                return isAIFirst ? PieceType.FrontRook : PieceType.BackRook;
+                return GameConfig.isAIFirst ? PieceType.FrontRook : PieceType.BackRook;
             default:
                 throw new Exception("Invalid piece type");
         }
     }
 
 
-    public static Square PosToSquare(int x, int y, bool isAIFirst)
+    public static Square PosToSquare(int x, int y)
     {
         // 筋はMyShogiが右上スタートで、本アプリでは左上スタート[0～8]で表現している。
 
         // fileはx座標で、何筋目かを表す。AIが後手番の場合、8-xで変換する必要がある。
-        var file = isAIFirst ? (File)x : (File)8 - x;
+        var file = GameConfig.isAIFirst ? (File)x : (File)8 - x;
 
         // rankはy座標で、何段目かを表す。AIが先手番の場合、8-yで変換する必要がある。
-        var rank = isAIFirst ? (Rank)8 - y : (Rank)y;
+        var rank = GameConfig.isAIFirst ? (Rank)8 - y : (Rank)y;
         return Util.MakeSquare(file, rank);
     }
 

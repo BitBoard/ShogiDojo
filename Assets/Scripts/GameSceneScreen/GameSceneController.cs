@@ -19,16 +19,14 @@ public class GameSceneController : MonoBehaviour
     private GameState gameState;
     private IShogiAI battleAI;
     private bool isBlackTurn = true;
-    private bool isAIFirst = false;
     private bool shouldPromote = false;
     private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
 
-	private async void Start()
+	private void Start()
     { 
-	    Init(); 
-	    await InitBoard();
-	}
+	    Init();
+    }
 
 	private void Init()
 	{
@@ -40,9 +38,9 @@ public class GameSceneController : MonoBehaviour
 	{
 		view.OpenDebugMenuButton.onClick.AddListener(OpenDebugMenu);
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
-		configPopupController.action += new UnityAction<string, BoardType, bool>((boardJsonPath, boardType, isBlackTurn) =>
+		configPopupController.action += new UnityAction<string, BoardType>((boardJsonPath, boardType) =>
         {
-            UniTask.Void(async () => await InitBoard(boardJsonPath, boardType, isBlackTurn));
+            UniTask.Void(async () => await InitBoard(boardJsonPath, boardType));
         });
 		view.PromotePopupView.PromoteButton.onClick.AddListener(() =>
 		{
@@ -104,8 +102,7 @@ public class GameSceneController : MonoBehaviour
 	/// </summary>
 	/// <param name="boardJsonPath"></param>
 	/// <param name="boardType"></param>
-	/// <param name="isAIFirst"></param>
-	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap, bool isAIFirst = false)
+	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
     {
         ClearPieces();
 		view.ClearAllCapturePieceArea();
@@ -116,7 +113,7 @@ public class GameSceneController : MonoBehaviour
         gameState.ShowBoard();
         battleAI = new RandomAI();
         isBlackTurn = true;
-		this.isAIFirst = isAIFirst;
+
 
         if (String.IsNullOrEmpty(boardJsonPath))
 		{
@@ -128,8 +125,8 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log(boardData);
         foreach (var data in boardData.boardData)
         {
-            var cellX = isAIFirst ? 8 - data.x : data.x;
-            var cellY = isAIFirst ? 8 - data.y : data.y;
+            var cellX = GameConfig.isAIFirst ? 8 - data.x : data.x;
+            var cellY = GameConfig.isAIFirst ? 8 - data.y : data.y;
             var piece = Instantiate(piecePrefab, cells[cellY, cellX].transform);
             piece.GetComponent<Piece>().SetPieceType(PieceData.StrToPieceType(data.pieceType));
 			piece.GetComponent<Piece>().SetPiecePosition(cellX, cellY);
@@ -146,7 +143,7 @@ public class GameSceneController : MonoBehaviour
 			
 	    }
 
-		if (isAIFirst)
+		if (GameConfig.isAIFirst)
 		{
 			await GetAIAction();
 		}
@@ -201,8 +198,8 @@ public class GameSceneController : MonoBehaviour
 			return;
 		}
 		
-		var from = selectedPiece.SqPos(isAIFirst);
-		var to = piece.SqPos(isAIFirst);
+		var from = selectedPiece.SqPos();
+		var to = piece.SqPos();
 		
 		// 合法手かどうかを判定する
 		var move = Util.MakeMove(from, to);
@@ -304,15 +301,15 @@ public class GameSceneController : MonoBehaviour
 		if (selectedPiece.IsCaptured())
 		{
 			var pt = Converter.PieceTypeToDropPiece(selectedPiece.GetPieceType());
-			var to = cell.SqPos(isAIFirst);
+			var to = cell.SqPos();
 			move = Util.MakeMoveDrop(pt, to);
 			decidedMove = move;
 		}
 		else
 		{
 			// 盤上の駒を移動する場合
-			var from = selectedPiece.SqPos(isAIFirst);
-			var to = cell.SqPos(isAIFirst);
+			var from = selectedPiece.SqPos();
+			var to = cell.SqPos();
 			move = Util.MakeMove(from, to);
 			movePromote = Util.MakeMovePromote(from, to);
 			decidedMove = move;
@@ -502,13 +499,13 @@ public class GameSceneController : MonoBehaviour
 	private bool IsPlayerTurn()
 	{
 		// 「先手のターンかつAIが後手」「後手のターンかつAIが先手」の場合、プレイヤーは手番を持っている
-		return isBlackTurn != isAIFirst;
+		return isBlackTurn != GameConfig.isAIFirst;
 	}
 
     private bool IsPlayerBlack()
     {
         // プレイヤーの持つ駒のPieceTypeがBlackかWhiteかを判定
-        return !isAIFirst;
+        return !GameConfig.isAIFirst;
     }
 
     private bool IsUpdateBlack()
@@ -547,7 +544,7 @@ public class GameSceneController : MonoBehaviour
 		// 駒を打つ場合
 		if (move.IsDrop())
 		{
-			var pieceType = Converter.DropPieceToPieceType(move.DroppedPiece(), isAIFirst);
+			var pieceType = Converter.DropPieceToPieceType(move.DroppedPiece());
 			Debug.Log("打つ駒:" + pieceType);
 			selectedPiece = GetCapturedPiece(pieceType);
 			await MovePiece(cells[toY, toX]);

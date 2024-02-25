@@ -36,9 +36,9 @@ public class Piece : MonoBehaviour, IPointerClickHandler
 	}
 	
 
-	public Square SqPos(bool isAIFirst)
+	public Square SqPos()
 	{
-		return Converter.PosToSquare(model.PiecePosition.Value.x, model.PiecePosition.Value.y, isAIFirst);
+		return Converter.PosToSquare(model.PiecePosition.Value.x, model.PiecePosition.Value.y);
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
