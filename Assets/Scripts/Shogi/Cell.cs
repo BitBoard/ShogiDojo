@@ -7,16 +7,16 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class Cell : MonoBehaviour, IPointerClickHandler
+public class Cell : MonoBehaviour, IPointerClickHandler, ISelectableTarget
 {
 	[SerializeField] private GameObject highlight;
 	public int x;
 	public int y;
 	public UnityAction OnClickAction;
 	
-	public Square SqPos(bool isAIFirst)
+	public Square SqPos()
 	{
-        return Converter.PosToSquare(x, y, isAIFirst);
+        return Converter.PosToSquare(x, y);
     }
 
 

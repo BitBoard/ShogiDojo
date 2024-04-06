@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEditor;
+using Cysharp.Threading.Tasks;
 
 public interface ICapturePieceNum
 {
@@ -20,27 +21,27 @@ public interface ICapturePieceNum
 // 先手後手の持ち駒に関する情報を管理するクラス
 public class CapturePieceAreaData 
 {
-    public ICapturePieceNum blackCapturePiece;
-    public ICapturePieceNum whiteCapturePiece;
+    private ICapturePieceNum frontCapturePieceNum;
+    private ICapturePieceNum backCapturePieceNum;
 
     public override string ToString()
     {
-        return $"Black: Pawn  , Num: {blackCapturePiece.pawn} \n" +
-               $"Black: Lance , Num: {blackCapturePiece.lance} \n" +
-               $"Black: Knight, Num: {blackCapturePiece.knight} \n" +
-               $"Black: Silver, Num: {blackCapturePiece.silver} \n" +
-               $"Black: Gold  , Num: {blackCapturePiece.gold} \n" +
-               $"Black: Bishop, Num: {blackCapturePiece.bishop} \n" +
-               $"Black: Rook  , Num: {blackCapturePiece.rook} \n" +
-               $"Black: King  , Num: {blackCapturePiece.king} \n" +
-               $"White: Pawn  , Num: {whiteCapturePiece.pawn} \n" +
-               $"White: Lance , Num: {whiteCapturePiece.lance} \n" +
-               $"White: Knight, Num: {whiteCapturePiece.knight} \n" +
-               $"White: Silver, Num: {whiteCapturePiece.silver} \n" +
-               $"White: Gold  , Num: {whiteCapturePiece.gold} \n" +
-               $"White: Bishop, Num: {whiteCapturePiece.bishop} \n" +
-               $"White: Rook  , Num: {whiteCapturePiece.rook} \n" +
-               $"White: King  , Num: {whiteCapturePiece.king} ";               ;
+        return $"Front: Pawn  , Num: {frontCapturePieceNum.pawn} \n" +
+               $"Front: Lance , Num: {frontCapturePieceNum.lance} \n" +
+               $"Front: Knight, Num: {frontCapturePieceNum.knight} \n" +
+               $"Front: Silver, Num: {frontCapturePieceNum.silver} \n" +
+               $"Front: Gold  , Num: {frontCapturePieceNum.gold} \n" +
+               $"Front: Bishop, Num: {frontCapturePieceNum.bishop} \n" +
+               $"Front: Rook  , Num: {frontCapturePieceNum.rook} \n" +
+               $"Front: King  , Num: {frontCapturePieceNum.king} \n" +
+               $"Back: Pawn  , Num: {backCapturePieceNum.pawn} \n" +
+               $"Back: Lance , Num: {backCapturePieceNum.lance} \n" +
+               $"Back: Knight, Num: {backCapturePieceNum.knight} \n" +
+               $"Back: Silver, Num: {backCapturePieceNum.silver} \n" +
+               $"Back: Gold  , Num: {backCapturePieceNum.gold} \n" +
+               $"Back: Bishop, Num: {backCapturePieceNum.bishop} \n" +
+               $"Back: Rook  , Num: {backCapturePieceNum.rook} \n" +
+               $"Back: King  , Num: {backCapturePieceNum.king} ";               ;
     }
 
     public CapturePieceAreaData()
@@ -50,90 +51,109 @@ public class CapturePieceAreaData
 
     private void InitCaptureArea()
     {
-        blackCapturePiece = CreateEmptyCapturePiece();
-        whiteCapturePiece = CreateEmptyCapturePiece();
+        frontCapturePieceNum = CreateEmptyCapturePiece();
+        backCapturePieceNum = CreateEmptyCapturePiece();
         Debug.Log("持ち駒情報の初期化が完了");
     }
 
-    public int getPieceNum(PieceType pieceType, bool isBlack)
+    public int GetPieceNum(PieceType pieceType, bool isFront)
     {
-        ICapturePieceNum capturePiece = isBlack ? blackCapturePiece : whiteCapturePiece;
+        ICapturePieceNum capturePieceNum = isFront ? frontCapturePieceNum : backCapturePieceNum;
 
         switch (pieceType)
         {
-            case PieceType.BlackPawn:
-            case PieceType.WhitePawn:
-                return capturePiece.pawn;
-            case PieceType.BlackLance:
-            case PieceType.WhiteLance:
-                return capturePiece.lance;
-            case PieceType.BlackKnight:
-            case PieceType.WhiteKnight:
-                return capturePiece.knight;
-            case PieceType.BlackSilver:
-            case PieceType.WhiteSilver:
-                return capturePiece.silver;
-            case PieceType.BlackGold:
-            case PieceType.WhiteGold:
-                return capturePiece.gold;
-            case PieceType.BlackBishop:
-            case PieceType.WhiteBishop:
-                return capturePiece.bishop;
-            case PieceType.BlackRook:
-            case PieceType.WhiteRook:
-                return capturePiece.rook;
-            case PieceType.BlackKing:
-            case PieceType.WhiteKing:
-                return capturePiece.king;
+            case PieceType.FrontPawn:
+            case PieceType.BackPawn:
+                return capturePieceNum.pawn;
+            case PieceType.FrontLance:
+            case PieceType.BackLance:
+                return capturePieceNum.lance;
+            case PieceType.FrontKnight:
+            case PieceType.BackKnight:
+                return capturePieceNum.knight;
+            case PieceType.FrontSilver:
+            case PieceType.BackSilver:
+                return capturePieceNum.silver;
+            case PieceType.FrontGold:
+            case PieceType.BackGold:
+                return capturePieceNum.gold;
+            case PieceType.FrontBishop:
+            case PieceType.BackBishop:
+                return capturePieceNum.bishop;
+            case PieceType.FrontRook:
+            case PieceType.BackRook:
+                return capturePieceNum.rook;
+            case PieceType.FrontKing:
+            case PieceType.BackKing:
+                return capturePieceNum.king;
             default:
                 Debug.LogError("Unknown pieceType: " + pieceType);
                 return 0;
         }
     }
     
-    public void UpdateCapturePieceData(PieceType pieceType, bool isBlack, bool isCaptured = false)
+    public void UpdateCapturePieceData(PieceType pieceType, bool isFront, bool isCaptured)
     {
-        ICapturePieceNum capturePiece = isBlack ? blackCapturePiece : whiteCapturePiece;
+        ICapturePieceNum capturePiece = isFront ? frontCapturePieceNum : backCapturePieceNum;
 
         // 持ち駒を消費した場合と取得し場合で更新式を分岐
         switch (pieceType)
         {
-            case PieceType.BlackPawn:
-            case PieceType.WhitePawn:
+            case PieceType.FrontPawn:
+            case PieceType.BackPawn:
+            case PieceType.FrontPawnPromoted:
+            case PieceType.BackPawnPromoted:
                 capturePiece.pawn += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackLance:
-            case PieceType.WhiteLance:
+            case PieceType.FrontLance:
+            case PieceType.BackLance:
+            case PieceType.FrontLancePromoted:
+            case PieceType.BackLancePromoted:
                 capturePiece.lance += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackKnight:
-            case PieceType.WhiteKnight:
+            case PieceType.FrontKnight:
+            case PieceType.BackKnight:
+            case PieceType.FrontKnightPromoted:
+            case PieceType.BackKnightPromoted:
                 capturePiece.knight += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackSilver:
-            case PieceType.WhiteSilver:
+            case PieceType.FrontSilver:
+            case PieceType.BackSilver:
+            case PieceType.FrontSilverPromoted:
+            case PieceType.BackSilverPromoted:
                 capturePiece.silver += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackGold:
-            case PieceType.WhiteGold:
+            case PieceType.FrontGold:
+            case PieceType.BackGold:
                 capturePiece.gold += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackBishop:
-            case PieceType.WhiteBishop:
+            case PieceType.FrontBishop:
+            case PieceType.BackBishop:
+            case PieceType.FrontBishopPromoted:
+            case PieceType.BackBishopPromoted:
                 capturePiece.bishop += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackRook:
-            case PieceType.WhiteRook:
+            case PieceType.FrontRook:
+            case PieceType.BackRook:
+            case PieceType.FrontRookPromoted:
+            case PieceType.BackRookPromoted:
                 capturePiece.rook += isCaptured ? -1 : 1;
                 break;
-            case PieceType.BlackKing:
-            case PieceType.WhiteKing:
+            case PieceType.FrontKing:
+            case PieceType.BackKing:
                 capturePiece.king += isCaptured ? -1 : 1;
                 break;
             default:
                 Debug.LogError("Unknown pieceType: " + pieceType);
                 break;
         }
+    }
+
+    public void CreateCapturePiece(int pieceNum, PieceType pieceType,GameObject piecePrefab)
+    {
+        piecePrefab.GetComponent<Piece>().SetPiecePosition(-1, -1);
+        piecePrefab.GetComponent<Piece>().SetPieceType(pieceType);
+        piecePrefab.GetComponent<Piece>().SetPieceNum(pieceNum);
     }
 
     private ICapturePieceNum CreateEmptyCapturePiece()
