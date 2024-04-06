@@ -17,6 +17,9 @@ public class ConfigPopupController : MonoBehaviour
     [SerializeField] private Button secondPlayerButton;
 
     public UnityAction<string, BoardType> action;
+    
+    private bool isPlayerFirst = true;
+    private bool isDropPiece = false;
 
     private void Awake()
     {
@@ -29,6 +32,7 @@ public class ConfigPopupController : MonoBehaviour
 
     private void StartGame()
     {
+        SetPlayerStatus();
         BoardType boardType;
         var dropPieceChoice = chooseDropPiece.value;
         string boardJsonPath;
@@ -107,41 +111,58 @@ public class ConfigPopupController : MonoBehaviour
 
     private void ChooseFirstPlayer()
     {
-        GameConfig.isAIFirst = false;
+        isPlayerFirst = true;
         firstPlayerButton.image.color = new Color32(101, 173, 211, 255);
         secondPlayerButton.image.color = new Color32(255, 255, 255, 255);
-        firstPlayer.text = "▲先手";
-        secondPlayer.text = "△後手";
     }
 
     private void ChooseSecondPlayer()
     {
-        GameConfig.isAIFirst = true;
+        isPlayerFirst = false;
         firstPlayerButton.image.color = new Color32(255, 255, 255, 255);
         secondPlayerButton.image.color = new Color32(101, 173, 211, 255);
-        firstPlayer.text = "△後手";
-        secondPlayer.text = "▲先手";
+    }
+    
+    private void SetPlayerStatus()
+    {
+        if (isDropPiece)
+        {
+            // 現在は駒落ちなら必ずAIが先手にしている
+            GameConfig.isAIFirst = true;
+        }
+        else
+        {
+            // 平手の場合、選択によって先手後手が変わる
+            GameConfig.isAIFirst = !isPlayerFirst;
+        }
+        
+        if (isPlayerFirst)
+        {
+            firstPlayer.text = isDropPiece ? "△上手" : "▲先手";
+            secondPlayer.text = isDropPiece ? "▲下手" : "△後手";
+        }
+        else
+        {
+            firstPlayer.text = isDropPiece ? "▲下手" : "△後手";
+            secondPlayer.text = isDropPiece ? "△上手" : "▲先手";
+        }
     }
 
     private void DropdownValueChanged(TMP_Dropdown change)
     {
         if (change.value == 0)
         {
-            GameConfig.isAIFirst = false;
+            isDropPiece = false;
             turnText.enabled = true;
             firstPlayerButton.gameObject.SetActive(true);
             secondPlayerButton.gameObject.SetActive(true);
-            firstPlayer.text = "▲先手";
-            secondPlayer.text = "△後手";
         }
         else
         {
-            GameConfig.isAIFirst = true;
+            isDropPiece = true;
             turnText.enabled = false;
             firstPlayerButton.gameObject.SetActive(false);
             secondPlayerButton.gameObject.SetActive(false);
-            firstPlayer.text = "△後手";
-            secondPlayer.text = "▲先手";
         }
     }
 }
