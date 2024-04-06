@@ -123,8 +123,8 @@ public class GameSceneController : MonoBehaviour
 		Debug.Log(boardData);
         foreach (var data in boardData.boardData)
         {
-            var cellX = GameConfig.isAIFirst ? 8 - data.x : data.x;
-            var cellY = GameConfig.isAIFirst ? 8 - data.y : data.y;
+            var cellX = GameConfig.isAIFirst && !GameConfig.isDropPiece ? 8 - data.x : data.x;
+            var cellY = GameConfig.isAIFirst && !GameConfig.isDropPiece ? 8 - data.y : data.y;
             var piece = Instantiate(piecePrefab, cells[cellY, cellX].transform);
             piece.GetComponent<Piece>().SetPieceType(PieceData.StrToPieceType(data.pieceType));
 			piece.GetComponent<Piece>().SetPiecePosition(cellX, cellY);
@@ -140,6 +140,11 @@ public class GameSceneController : MonoBehaviour
 			});
 			
 	    }
+
+        if (GameConfig.isDropPiece)
+        {
+	        isBlackTurn = false;
+        }
 
 		if (GameConfig.isAIFirst)
 		{
@@ -447,19 +452,29 @@ public class GameSceneController : MonoBehaviour
 	
 	private bool IsPlayerTurn()
 	{
+		if (GameConfig.isDropPiece)
+		{
+			// 駒落ちの場合
+			return isBlackTurn;
+		}
 		// 「先手のターンかつAIが後手」「後手のターンかつAIが先手」の場合、プレイヤーは手番を持っている
 		return isBlackTurn != GameConfig.isAIFirst;
 	}
 
     private bool IsPlayerBlack()
     {
+	    if (GameConfig.isDropPiece)
+	    {
+		    // 駒落ちの場合
+		    return true;
+	    }
         // プレイヤーの持つ駒のPieceTypeがBlackかWhiteかを判定
         return !GameConfig.isAIFirst;
     }
 
     private bool IsUpdateBlack()
     {
-		// 更新したい情報に関連するPieceTypeがBlackに紐づいているかWhiteに紐づいているかを判定
+	    // 更新したい情報に関連するPieceTypeがBlackに紐づいているかWhiteに紐づいているかを判定
 		return IsPlayerBlack() == IsPlayerTurn();
     }
 

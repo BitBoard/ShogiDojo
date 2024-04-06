@@ -32,8 +32,8 @@ public class Management : SingletonMonoBehaviour<Management>
 
 	public Sprite GetPieceSprite(PieceType pieceType)
 	{
-        // 先手がAIの場合は先手がプレイヤーの場合と異なり画像を反転させて渡す
-        return GameConfig.isAIFirst? pieceSprites[GetReversePiceType(pieceType)] : pieceSprites[pieceType];
+        // 先手がAIの場合かつ駒落ちでない場合、先手がプレイヤーの場合と異なり画像を反転させて渡す
+        return GameConfig.isAIFirst && !GameConfig.isDropPiece ? pieceSprites[GetReversePiceType(pieceType)] : pieceSprites[pieceType];
     }
 
 	private PieceType GetReversePiceType(PieceType pieceType)

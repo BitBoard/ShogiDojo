@@ -63,10 +63,10 @@ public class Converter
         // 筋はMyShogiが右上スタートで、本アプリでは左上スタート[0～8]で表現している。
 
         // fileはx座標で、何筋目かを表す。AIが後手番の場合、8-xで変換する必要がある。
-        var file = GameConfig.isAIFirst ? (File)x : (File)8 - x;
+        var file = GameConfig.isAIFirst && !GameConfig.isDropPiece ? (File)x : (File)8 - x;
 
         // rankはy座標で、何段目かを表す。AIが先手番の場合、8-yで変換する必要がある。
-        var rank = GameConfig.isAIFirst ? (Rank)8 - y : (Rank)y;
+        var rank = GameConfig.isAIFirst  && !GameConfig.isDropPiece ? (Rank)8 - y : (Rank)y;
         return Util.MakeSquare(file, rank);
     }
 

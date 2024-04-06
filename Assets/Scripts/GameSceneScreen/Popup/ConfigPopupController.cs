@@ -129,11 +129,14 @@ public class ConfigPopupController : MonoBehaviour
         {
             // 現在は駒落ちなら必ずAIが先手にしている
             GameConfig.isAIFirst = true;
+            GameConfig.isDropPiece = true;
+            isPlayerFirst = false;
         }
         else
         {
             // 平手の場合、選択によって先手後手が変わる
             GameConfig.isAIFirst = !isPlayerFirst;
+            GameConfig.isDropPiece = false;
         }
         
         if (isPlayerFirst)
@@ -156,6 +159,7 @@ public class ConfigPopupController : MonoBehaviour
             turnText.enabled = true;
             firstPlayerButton.gameObject.SetActive(true);
             secondPlayerButton.gameObject.SetActive(true);
+            ChooseFirstPlayer();
         }
         else
         {
