@@ -153,10 +153,10 @@ public class Piece : MonoBehaviour, IPointerClickHandler, ISelectableTarget
 		var pieceTypeNum = (int) model.PieceType.Value;
 		if (isBlackTurn)
 		{
-			return pieceTypeNum <= 15;
+			return pieceTypeNum < 15;
 		}
 		
-		return pieceTypeNum > 15;
+		return pieceTypeNum >= 15;
 	}
 
 	public bool IsCaptured()
