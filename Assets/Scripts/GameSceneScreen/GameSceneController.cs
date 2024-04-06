@@ -116,6 +116,7 @@ public class GameSceneController : MonoBehaviour
 	private async UniTask InitBoard(string boardJsonPath = "", BoardType boardType = BoardType.NoHandicap)
     {
         ClearPieces();
+        ClearHighlight();
 		view.ClearAllCapturePieceArea();
         capturePieceAreaData = new CapturePieceAreaData();
         selectedPiece = null;
@@ -176,6 +177,17 @@ public class GameSceneController : MonoBehaviour
 			{
 				Destroy(piece);
 			}
+		}
+	}
+	
+	/// <summary>
+	/// 全てのハイライトを消去する
+	/// </summary>
+	private void ClearHighlight()
+	{
+		foreach (var cell in cells)
+		{
+			cell.SetHighlight(false);
 		}
 	}
 	
@@ -332,6 +344,13 @@ public class GameSceneController : MonoBehaviour
 		// 駒音を再生する
 		selectedPiece.GetComponent<AudioSource>().Play();
 		
+		// 全てのマスのハイライトをOFFにする
+		ClearHighlight();
+		// 最終手が着手された位置のcellを取得
+		var lastCell = cells[selectedPiece.GetPiecePosition().y, selectedPiece.GetPiecePosition().x];
+		// セルのハイライトをONにする
+		lastCell.SetHighlight(true);
+
 		Debug.Log("移動した駒:" + selectedPiece);
 		
 		// 局面を進める

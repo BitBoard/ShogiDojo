@@ -18,11 +18,15 @@ public class Cell : MonoBehaviour, IPointerClickHandler, ISelectableTarget
 	{
         return Converter.PosToSquare(x, y);
     }
-
-
+	
 	public void OnPointerClick(PointerEventData eventData)
 	{
 		Debug.Log("Cell clicked");
 		OnClickAction.Invoke();
+	}
+	
+	public void SetHighlight(bool isHighlighted)
+	{
+		highlight.SetActive(isHighlighted);
 	}
 }
