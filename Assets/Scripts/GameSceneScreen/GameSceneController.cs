@@ -53,6 +53,18 @@ public class GameSceneController : MonoBehaviour
 			view.PromotePopupView.gameObject.SetActive(false);
 			promoteSelectionDone = true;
 		});
+		
+		view.RetryButton.onClick.AddListener(() =>
+		{
+			view.ResultPanel.SetActive(false);
+			UniTask.Void(async () => await InitBoard());
+		});
+		
+		view.ResetButton.onClick.AddListener(() =>
+		{
+			// シーンをリロードする
+			UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
+		});
 	}
 
 	private void SetCells()
@@ -329,13 +341,26 @@ public class GameSceneController : MonoBehaviour
 		// 着手後処理
 		ClearSelectedPiece();
 		ChangeTurn();
+		
+		// 詰んでいるかどうかを判定する
+		if (gameState.IsMated())
+		{
+			ShowResult(!IsPlayerTurn());
+			return;
+		}
 
 		// AIの手番の場合はAIの手を待つ
 		if (!IsPlayerTurn())
 		{
 			await GetAIAction();
+			
+			// 詰んでいるかどうかを判定する
+			if (gameState.IsMated())
+			{
+				ShowResult(!IsPlayerTurn());
+			}
 		}
-
+		
 	}
 
 	/// <summary>
@@ -513,6 +538,16 @@ public class GameSceneController : MonoBehaviour
             });
         };
     }
+	
+	/// <summary>
+	/// 結果表示を行う
+	/// </summary>
+	/// <param name="isPlayerWin"></param>
+	public void ShowResult(bool isPlayerWin)
+	{
+		view.SetResult(isPlayerWin);
+		view.ResultPanel.SetActive(true);
+	}
 
 	public void OpenDebugMenu()
 	{

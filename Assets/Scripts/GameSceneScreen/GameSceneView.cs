@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 
@@ -11,6 +12,10 @@ public class GameSceneView : MonoBehaviour
     [SerializeField] private GameObject frontCapturePieceArea;
     [SerializeField] private GameObject backCapturePieceArea;
     [SerializeField] private PromotePopupView promotePopupView;
+    [SerializeField] private GameObject resultPanel;
+    [SerializeField] private TextMeshProUGUI resultText;
+    [SerializeField] private Button retryButton;
+    [SerializeField] private Button resetButton;
 
     public Button OpenDebugMenuButton => openDebugMenuButton;
 	public Button CloseDebugMenuButton => closeDebugMenuButton;
@@ -22,6 +27,14 @@ public class GameSceneView : MonoBehaviour
 	public GameObject BackCapturePieceArea => backCapturePieceArea;
 	
 	public PromotePopupView PromotePopupView => promotePopupView;
+	
+	public GameObject ResultPanel => resultPanel;
+	
+	public TextMeshProUGUI ResultText => resultText;
+	
+	public Button RetryButton => retryButton;
+	
+	public Button ResetButton => resetButton;
 
 	// 新規対局時に駒台の表示を初期化
 	public void ClearAllCapturePieceArea()
@@ -37,4 +50,12 @@ public class GameSceneView : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
+	
+	// 結果を設定
+	public void SetResult(bool isPlayerWin)
+	{
+		string result = isPlayerWin ? "あなたの勝ち！！" : "あなたの負け...";
+		resultText.text = result;
+	}
+	
 }
