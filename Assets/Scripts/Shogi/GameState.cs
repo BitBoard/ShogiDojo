@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
+using Color = MyShogi.Model.Shogi.Core.Color;
 
 /// <summary>
 /// ゲームの状態を表すクラス
@@ -63,11 +64,45 @@ public class GameState
 	}
 	
 	/// <summary>
+	/// 現在の手番のプレイヤーを返す
+	/// </summary>
+	public Color GetTurnPlayer()
+	{
+		return position.sideToMove;
+	}
+	
+	/// <summary>
 	/// 現局面の盤面情報を表示する
 	/// </summary>
 	public void ShowBoard()
 	{
 		Debug.Log(position.Pretty());
+	}
+
+	/// <summary>
+	/// 現在の局面の指定したプレイヤーから見た駒割のスコアを返す
+	/// </summary>
+	public int GetPieceScore(Color color)
+	{
+		// 駒割のスコアを計算する
+		var blackScore = position.GetTotalPieceScore(Color.BLACK);
+		var whiteScore = position.GetTotalPieceScore(Color.WHITE);
+		
+		var score = color == Color.BLACK ? blackScore - whiteScore : whiteScore - blackScore;
+
+		return score;
+	}
+	
+	/// <summary>
+	/// 探索時のオブジェクト複製用メソッド
+	/// </summary>
+	public GameState Clone()
+	{
+		var clone = new GameState
+		{
+			position = position.Clone()
+		};
+		return clone;
 	}
 	
 }

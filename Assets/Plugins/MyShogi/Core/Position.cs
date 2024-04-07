@@ -82,6 +82,27 @@ namespace MyShogi.Model.Shogi.Core
         public Color sideToMove;
         public int gamePly;
     }
+    
+    /// <summary>
+    /// Apery(WCSC26)での駒価値
+    /// </summary>
+    public enum PieceValue
+    {
+        PawnValue = 90,
+        LanceValue = 315,
+        KnightValue = 405,
+        SilverValue = 495,
+        GoldValue = 540,
+        BishopValue = 855,
+        RookValue = 990,
+        ProPawnValue = 540,
+        ProLanceValue = 540,
+        ProKnightValue = 540,
+        ProSilverValue = 540,
+        HorseValue = 945,
+        DragonValue = 1395,
+        KingValue = 15000,
+    }
 
     /// <summary>
     /// 盤面を表現するクラス
@@ -1872,6 +1893,56 @@ namespace MyShogi.Model.Shogi.Core
         public bool EffectedTo(Color c, Square sq, Square kingSq)
         {
             return AttackersTo(c, sq, Pieces() ^ kingSq).IsNotZero();
+        }
+
+        /// <summary>
+        /// 指定した駒の価値を返す
+        /// </summary>
+        public int GetPieceValue(Piece piece)
+        {
+            switch (piece.PieceType())
+            {
+                case Piece.PAWN: return (int)PieceValue.PawnValue;
+                case Piece.LANCE: return (int)PieceValue.LanceValue;
+                case Piece.KNIGHT: return (int)PieceValue.KnightValue;
+                case Piece.SILVER: return (int)PieceValue.SilverValue;
+                case Piece.GOLD: return (int)PieceValue.GoldValue;
+                case Piece.BISHOP: return (int)PieceValue.BishopValue;
+                case Piece.ROOK: return (int)PieceValue.RookValue;
+                case Piece.KING: return (int)PieceValue.KingValue;
+                case Piece.PRO_PAWN: return (int)PieceValue.ProPawnValue;
+                case Piece.PRO_LANCE: return (int)PieceValue.ProLanceValue;
+                case Piece.PRO_KNIGHT: return (int)PieceValue.ProKnightValue;
+                case Piece.PRO_SILVER: return (int)PieceValue.ProSilverValue;
+                case Piece.HORSE: return (int)PieceValue.HorseValue;
+                case Piece.DRAGON: return (int)PieceValue.DragonValue;
+                default: return 0;
+            }
+            
+        }
+
+        /// <summary>
+        /// 指定した色に関して盤上の駒と手駒の総得点を計算して返す
+        /// </summary>
+        public int GetTotalPieceScore(Color c)
+        {
+            int score = 0;
+            
+            // 盤上の駒
+            foreach (var sq in All.Squares())
+            {
+                var pc = PieceOn(sq);
+                if (pc.PieceColor() == c)
+                    score += GetPieceValue(pc);
+            }
+            
+            // 手駒
+            for (Piece pr = Piece.PAWN; pr < Piece.HAND_NB; ++pr)
+            {
+                score += GetPieceValue(pr) * Hand(c).Count(pr);
+            }
+            
+            return score;
         }
 
         // -------------------------------------------------------------------------

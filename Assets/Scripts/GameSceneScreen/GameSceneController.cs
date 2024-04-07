@@ -137,7 +137,8 @@ public class GameSceneController : MonoBehaviour
         selectedPiece = null;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
-        battleAI = new RandomAI();
+        //battleAI = new RandomAI();
+        battleAI = new GreedyAI();
         isBlackTurn = true;
 
 
