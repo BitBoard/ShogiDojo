@@ -18,6 +18,7 @@ public class GameSceneView : MonoBehaviour
     [SerializeField] private Button resetButton;
     [SerializeField] private Button resignButton;
     [SerializeField] private GameObject thinkingObject;
+    [SerializeField] private TextMeshProUGUI versionNumText;
 
     public Button OpenDebugMenuButton => openDebugMenuButton;
 	public Button CloseDebugMenuButton => closeDebugMenuButton;
@@ -41,6 +42,8 @@ public class GameSceneView : MonoBehaviour
 	public Button ResignButton => resignButton;
 	
 	public GameObject ThinkingObject => thinkingObject;
+	
+	public TextMeshProUGUI VersionNumText => versionNumText;
 
 	// 新規対局時に駒台の表示を初期化
 	public void ClearAllCapturePieceArea()

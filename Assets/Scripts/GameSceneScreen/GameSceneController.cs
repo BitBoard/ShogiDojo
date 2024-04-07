@@ -21,6 +21,9 @@ public class GameSceneController : MonoBehaviour
     private bool shouldPromote = false;
     private bool promoteSelectionDone = false;
 	private CapturePieceAreaData capturePieceAreaData;
+	
+	private string prevBoardJsonPath = "";
+	private BoardType prevBoardType = BoardType.NoHandicap;
 
 	private void Start()
     { 
@@ -29,6 +32,7 @@ public class GameSceneController : MonoBehaviour
 
 	private void Init()
 	{
+		view.VersionNumText.text = "Ver:" + Application.version;
         SetEvent();
         SetCells();
 	}
@@ -57,7 +61,7 @@ public class GameSceneController : MonoBehaviour
 		view.RetryButton.onClick.AddListener(() =>
 		{
 			view.ResultPanel.SetActive(false);
-			UniTask.Void(async () => await InitBoard());
+			UniTask.Void(async () => await InitBoard(prevBoardJsonPath, prevBoardType));
 		});
 		
 		view.ResetButton.onClick.AddListener(() =>
@@ -124,7 +128,12 @@ public class GameSceneController : MonoBehaviour
         ClearPieces();
         ClearHighlight();
 		view.ClearAllCapturePieceArea();
-        capturePieceAreaData = new CapturePieceAreaData();
+		
+	    // 設定情報の保存
+		prevBoardJsonPath = boardJsonPath;
+		prevBoardType = boardType;
+
+		capturePieceAreaData = new CapturePieceAreaData();
         selectedPiece = null;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
