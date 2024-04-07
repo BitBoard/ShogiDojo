@@ -15,11 +15,13 @@ public class ConfigPopupController : MonoBehaviour
     [SerializeField] private Button closeButton;
     [SerializeField] private Button firstPlayerButton;
     [SerializeField] private Button secondPlayerButton;
+    [SerializeField] private TMP_Dropdown aiTypeDropdown;
 
     public UnityAction<string, BoardType> action;
     
     private bool isPlayerFirst = true;
     private bool isDropPiece = false;
+    private AITypes aiType = AITypes.AlphaBetaAI;
 
     private void Awake()
     {
@@ -28,6 +30,7 @@ public class ConfigPopupController : MonoBehaviour
         firstPlayerButton.onClick.AddListener(ChooseFirstPlayer);
         secondPlayerButton.onClick.AddListener(ChooseSecondPlayer);
         chooseDropPiece.onValueChanged.AddListener(delegate { DropdownValueChanged(chooseDropPiece); });
+        aiTypeDropdown.onValueChanged.AddListener(delegate { AITypeDropdownValueChanged(aiTypeDropdown); });
     }
 
     private void StartGame()
@@ -125,6 +128,8 @@ public class ConfigPopupController : MonoBehaviour
     
     private void SetPlayerStatus()
     {
+        GameConfig.aiType = aiType;
+        
         if (isDropPiece)
         {
             // 現在は駒落ちなら必ずAIが先手にしている
@@ -168,5 +173,10 @@ public class ConfigPopupController : MonoBehaviour
             firstPlayerButton.gameObject.SetActive(false);
             secondPlayerButton.gameObject.SetActive(false);
         }
+    }
+    
+    private void AITypeDropdownValueChanged(TMP_Dropdown change)
+    {
+        aiType = (AITypes) change.value;
     }
 }

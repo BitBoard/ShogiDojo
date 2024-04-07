@@ -67,6 +67,7 @@ public class GameSceneController : MonoBehaviour
 		view.ResetButton.onClick.AddListener(() =>
 		{
 			// シーンをリロードする
+			GameConfig.Reset();
 			UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
 		});
 		
@@ -137,8 +138,24 @@ public class GameSceneController : MonoBehaviour
         selectedPiece = null;
         gameState = new GameState(boardType);
         gameState.ShowBoard();
-        //battleAI = new RandomAI();
-        battleAI = new GreedyAI();
+        
+        // AIの設定
+        switch (GameConfig.aiType)
+        {
+	        case AITypes.RandomAI:
+		        battleAI = new RandomAI();
+		        break;
+	        case AITypes.GreedyAI:
+		        battleAI = new GreedyAI();
+		        break;
+	        case AITypes.AlphaBetaAI:
+		        battleAI = new AlphaBetaAI();
+		        break;
+	        default:
+		        battleAI = new AlphaBetaAI();
+		        break;
+        }
+
         isBlackTurn = true;
 
 

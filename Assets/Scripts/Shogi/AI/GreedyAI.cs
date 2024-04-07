@@ -17,21 +17,23 @@ public class GreedyAI : IShogiAI
 		
 		// 合法手の中で最も評価値が高い手を選ぶ
 		var bestMove = moves[0];
-		var bestEval = -100000;
+		var bestEval = -10000000;
 		foreach (var move in moves)
 		{
 			var nextGameState = gameState.Clone();
 			nextGameState.Advance(move);
-			var eval = nextGameState.GetPieceScore(color);
+			// 相手から見た評価値になるので反転させる
+			var score = - nextGameState.GetPieceScore();
 			
 			if (nextGameState.IsMated())
 			{
-				eval = 999999;
+				Debug.Log("詰みを発見しました");
+				return move;
 			}
 
-			if (eval > bestEval)
+			if (score > bestEval)
 			{
-				bestEval = eval;
+				bestEval = score;
 				bestMove = move;
 			}
 		}

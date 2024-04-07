@@ -80,15 +80,21 @@ public class GameState
 	}
 
 	/// <summary>
-	/// 現在の局面の指定したプレイヤーから見た駒割のスコアを返す
+	/// 現在の局面のターンプレイヤーから見た駒割のスコアを返す
 	/// </summary>
-	public int GetPieceScore(Color color)
+	public int GetPieceScore()
 	{
+		// 詰んでしまっている場合は最低評価値を返す
+		if (IsMated())
+		{
+			return -999999;
+		}
+		
 		// 駒割のスコアを計算する
 		var blackScore = position.GetTotalPieceScore(Color.BLACK);
 		var whiteScore = position.GetTotalPieceScore(Color.WHITE);
 		
-		var score = color == Color.BLACK ? blackScore - whiteScore : whiteScore - blackScore;
+		var score = GetTurnPlayer() == Color.BLACK ? blackScore - whiteScore : whiteScore - blackScore;
 
 		return score;
 	}

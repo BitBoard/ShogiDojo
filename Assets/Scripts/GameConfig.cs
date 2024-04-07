@@ -1,7 +1,10 @@
+using UnityEngine.PlayerLoop;
+
 public static class GameConfig
 {
 	public static bool isAIFirst = false;
 	public static bool isDropPiece = false;
+	public static AITypes aiType = AITypes.AlphaBetaAI;
 	public static string initialBoardJsonPath = "Data/initial-board";
     public static string boardDropLeftLanceJsonPath = "Data/board-drop-left-lance";
     public static string boardDropRightLanceJsonPath = "Data/board-drop-right-lance";
@@ -16,4 +19,11 @@ public static class GameConfig
     public static string boardDropSixJsonPath = "Data/board-drop-six";
     public static string boardDropEightJsonPath = "Data/board-drop-eight";
     public static string boardDropTenJsonPath = "Data/board-drop-ten";
+    
+    public static void Reset()
+	{
+		isAIFirst = false;
+		isDropPiece = false;
+		aiType = AITypes.AlphaBetaAI;
+	}
 }
