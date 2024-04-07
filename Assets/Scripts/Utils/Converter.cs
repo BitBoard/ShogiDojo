@@ -39,19 +39,19 @@ public class Converter
         switch (piece)
         {
             case MSPiece.PAWN:
-                return GameConfig.isAIFirst ? PieceType.FrontPawn : PieceType.BackPawn;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontPawn : PieceType.BackPawn;
             case MSPiece.LANCE:
-                return GameConfig.isAIFirst ? PieceType.FrontLance : PieceType.BackLance;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontLance : PieceType.BackLance;
             case MSPiece.KNIGHT:
-                return GameConfig.isAIFirst ? PieceType.FrontKnight : PieceType.BackKnight;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontKnight : PieceType.BackKnight;
             case MSPiece.SILVER:
-                return GameConfig.isAIFirst ? PieceType.FrontSilver : PieceType.BackSilver;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontSilver : PieceType.BackSilver;
             case MSPiece.GOLD:
-                return GameConfig.isAIFirst ? PieceType.FrontGold : PieceType.BackGold;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontGold : PieceType.BackGold;
             case MSPiece.BISHOP:
-                return GameConfig.isAIFirst ? PieceType.FrontBishop : PieceType.BackBishop;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontBishop : PieceType.BackBishop;
             case MSPiece.ROOK:
-                return GameConfig.isAIFirst ? PieceType.FrontRook : PieceType.BackRook;
+                return GameConfig.isAIFirst && !GameConfig.isDropPiece ? PieceType.FrontRook : PieceType.BackRook;
             default:
                 throw new Exception("Invalid piece type");
         }

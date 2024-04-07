@@ -16,6 +16,8 @@ public class GameSceneView : MonoBehaviour
     [SerializeField] private TextMeshProUGUI resultText;
     [SerializeField] private Button retryButton;
     [SerializeField] private Button resetButton;
+    [SerializeField] private Button resignButton;
+    [SerializeField] private GameObject thinkingObject;
 
     public Button OpenDebugMenuButton => openDebugMenuButton;
 	public Button CloseDebugMenuButton => closeDebugMenuButton;
@@ -35,6 +37,10 @@ public class GameSceneView : MonoBehaviour
 	public Button RetryButton => retryButton;
 	
 	public Button ResetButton => resetButton;
+	
+	public Button ResignButton => resignButton;
+	
+	public GameObject ThinkingObject => thinkingObject;
 
 	// 新規対局時に駒台の表示を初期化
 	public void ClearAllCapturePieceArea()

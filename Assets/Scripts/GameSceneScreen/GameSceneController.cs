@@ -65,6 +65,12 @@ public class GameSceneController : MonoBehaviour
 			// シーンをリロードする
 			UnityEngine.SceneManagement.SceneManager.LoadScene("GameScene");
 		});
+		
+		view.ResignButton.onClick.AddListener(() =>
+		{
+			// 投了する
+			ShowResult(false);
+		});
 	}
 
 	private void SetCells()
@@ -161,7 +167,11 @@ public class GameSceneController : MonoBehaviour
 
 		if (GameConfig.isAIFirst)
 		{
+			view.ThinkingObject.SetActive(true);
+			
 			await GetAIAction();
+			
+			view.ThinkingObject.SetActive(false);
 		}
     }
 
@@ -371,7 +381,11 @@ public class GameSceneController : MonoBehaviour
 		// AIの手番の場合はAIの手を待つ
 		if (!IsPlayerTurn())
 		{
+			view.ThinkingObject.SetActive(true);
+			
 			await GetAIAction();
+			
+			view.ThinkingObject.SetActive(false);
 			
 			// 詰んでいるかどうかを判定する
 			if (gameState.IsMated())
