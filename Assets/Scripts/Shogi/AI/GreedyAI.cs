@@ -1,20 +1,19 @@
+using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
-using Color = MyShogi.Model.Shogi.Core.Color;
 
 /// <summary>
 /// 一手先の駒得狙いのAI
 /// </summary>
 public class GreedyAI : IShogiAI
 {
-	public Move GetMove(GameState gameState)
+	public async UniTask<Move> GetMove(GameState gameState)
 	{
+		await UniTask.Delay(1000);
+		
 		var moves = gameState.GetLegalMoves();
 		Debug.Log("合法手の数:" + moves.Count);
-		
-		// 現在の手番の色
-		var color = gameState.GetTurnPlayer();
-		
+
 		// 合法手の中で最も評価値が高い手を選ぶ
 		var bestMove = moves[0];
 		var bestEval = -10000000;

@@ -1,32 +1,32 @@
+using System.Diagnostics;
+using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
-using UnityEngine;
-using Color = MyShogi.Model.Shogi.Core.Color;
+using Debug = UnityEngine.Debug;
 
 public class AlphaBetaAI : IShogiAI
 {
-	public Move GetMove(GameState gameState)
+	public async UniTask<Move> GetMove(GameState gameState)
 	{
 		var moves = gameState.GetLegalMoves();
 		Debug.Log("合法手の数:" + moves.Count);
-		
-		// 現在の手番の色
-		var color = gameState.GetTurnPlayer();
-		
+
 		// 合法手の中で最も評価値が高い手を選ぶ
 		var bestMove = moves[0];
 		int alpha = -10000000;
 		int beta = 10000000;
 
 		// 時間計測
-		var sw = new System.Diagnostics.Stopwatch();
+		var sw = new Stopwatch();
 		sw.Start();
 
 		foreach (var move in moves)
 		{
-			// 5秒以上かかったら打ち切る
-			if (sw.ElapsedMilliseconds > 5000)
+			// 10秒以上かかったら打ち切る
+			if (sw.ElapsedMilliseconds > 10000)
 			{
-				Debug.Log("探索タイムアウト（5秒）");
+				sw.Stop();
+				Debug.Log("探索タイムアウト（10秒）");
+				Debug.Log("AI側から見た評価値:" + alpha);
 				return bestMove;
 			}
 			
@@ -40,7 +40,7 @@ public class AlphaBetaAI : IShogiAI
 			}
 			
 			// 相手から見た評価値になるので反転させる
-			var score = - AlphaBetaSearch(nextGameState, 1, alpha, beta);
+			var score = - await UniTask.RunOnThreadPool(() => AlphaBetaSearch(nextGameState, 2, -beta, -alpha, sw)); 
 			
 			if (score > alpha)
 			{
@@ -55,11 +55,18 @@ public class AlphaBetaAI : IShogiAI
 		return bestMove;
 	}
 	
-	private int AlphaBetaSearch(GameState gameState, int depth, int alpha, int beta)
+	private async UniTask<int> AlphaBetaSearch(GameState gameState, int depth, int alpha, int beta, Stopwatch sw)
 	{
 		// 詰んでいるか、探索深さが0になったら評価値を返す
 		if (gameState.IsMated() || depth == 0)
 		{
+			return gameState.GetPieceScore();
+		}
+		
+		// 探索が10秒以上かかったら打ち切る
+		if (sw.ElapsedMilliseconds > 10000)
+		{
+			sw.Stop();
 			return gameState.GetPieceScore();
 		}
 		
@@ -69,7 +76,7 @@ public class AlphaBetaAI : IShogiAI
 		{
 			var nextGameState = gameState.Clone();
 			nextGameState.Advance(move);
-			var score = - AlphaBetaSearch(nextGameState, depth - 1, alpha, beta);
+			var score = - await UniTask.RunOnThreadPool(() => AlphaBetaSearch(nextGameState, depth - 1, -beta, -alpha, sw));
 			
 			if (score > alpha)
 			{

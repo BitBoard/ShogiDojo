@@ -428,8 +428,9 @@ public class GameSceneController : MonoBehaviour
 	/// </summary>
 	private async UniTask GetAIAction()
 	{
-		await UniTask.Delay(2000);
-		var move = battleAI.GetMove(gameState);
+		await UniTask.Delay(1000);
+		
+		var move = await battleAI.GetMove(gameState);
 		Debug.Log("AIの指し手:" + move.Pretty());
 		var from = move.IsDrop() ? Square.NB : move.From();
 		var fromX = move.IsDrop() ? -1 : Converter.SquareToX(from);

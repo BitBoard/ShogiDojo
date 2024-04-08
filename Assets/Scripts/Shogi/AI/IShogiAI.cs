@@ -1,6 +1,7 @@
+using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 
 public interface IShogiAI
 { 
-	Move GetMove(GameState gameState);
+	UniTask<Move> GetMove(GameState gameState);
 }
