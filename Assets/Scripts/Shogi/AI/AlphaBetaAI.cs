@@ -5,6 +5,9 @@ using Debug = UnityEngine.Debug;
 
 public class AlphaBetaAI : IShogiAI
 {
+	private const int _depth = 2;
+	private const int _timeLimit = 5000; 
+	
 	public async UniTask<Move> GetMove(GameState gameState)
 	{
 		var moves = gameState.GetLegalMoves();
@@ -21,11 +24,11 @@ public class AlphaBetaAI : IShogiAI
 
 		foreach (var move in moves)
 		{
-			// 10秒以上かかったら打ち切る
-			if (sw.ElapsedMilliseconds > 10000)
+			// 指定秒以上かかったら打ち切る
+			if (sw.ElapsedMilliseconds > _timeLimit)
 			{
 				sw.Stop();
-				Debug.Log("探索タイムアウト（10秒）");
+				Debug.Log($"探索タイムアウト{_timeLimit / 1000}秒");
 				Debug.Log("AI側から見た評価値:" + alpha);
 				return bestMove;
 			}
@@ -40,7 +43,7 @@ public class AlphaBetaAI : IShogiAI
 			}
 			
 			// 相手から見た評価値になるので反転させる
-			var score = - await UniTask.RunOnThreadPool(() => AlphaBetaSearch(nextGameState, 2, -beta, -alpha, sw)); 
+			var score = - await UniTask.RunOnThreadPool(() => AlphaBetaSearch(nextGameState, _depth, -beta, -alpha, sw)); 
 			
 			if (score > alpha)
 			{
@@ -63,8 +66,8 @@ public class AlphaBetaAI : IShogiAI
 			return gameState.GetPieceScore();
 		}
 		
-		// 探索が10秒以上かかったら打ち切る
-		if (sw.ElapsedMilliseconds > 10000)
+		// 探索が指定秒以上かかったら打ち切る
+		if (sw.ElapsedMilliseconds > _timeLimit)
 		{
 			sw.Stop();
 			return gameState.GetPieceScore();
