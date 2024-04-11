@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
@@ -12,8 +13,17 @@ public class AlphaBetaAI : IShogiAI
 	
 	public async UniTask<Move> GetMove(GameState gameState, CancellationToken token = default)
 	{
-		var moves = gameState.GetLegalMoves();
-		Debug.Log("合法手の数:" + moves.Count);
+		var baseMoves = gameState.GetLegalMoves();
+		Debug.Log("合法手の数:" + baseMoves.Count);
+		
+		var moves = new List<Move>();
+
+		while (baseMoves.Count > 0)
+		{
+			moves.Add(baseMoves[Random.Range(0, baseMoves.Count)]);
+			baseMoves.RemoveAt(baseMoves.Count - 1);
+		}
+		
 
 		// 合法手の中で最も評価値が高い手を選ぶ
 		var bestMove = moves[0];
