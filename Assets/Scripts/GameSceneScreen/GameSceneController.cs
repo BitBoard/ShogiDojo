@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class GameSceneController : MonoBehaviour
 	
 	private string prevBoardJsonPath = "";
 	private BoardType prevBoardType = BoardType.NoHandicap;
+	
+	private CancellationTokenSource cts = new CancellationTokenSource();
 
 	private void Start()
     { 
@@ -43,6 +46,8 @@ public class GameSceneController : MonoBehaviour
 		view.CloseDebugMenuButton.onClick.AddListener(CloseDebugMenu);
 		configPopupController.action += new UnityAction<string, BoardType>((boardJsonPath, boardType) =>
         {
+	        cts.Cancel();
+	        view.ThinkingObject.SetActive(false);
             UniTask.Void(async () => await InitBoard(boardJsonPath, boardType));
         });
 		view.PromotePopupView.PromoteButton.onClick.AddListener(() =>
@@ -428,9 +433,9 @@ public class GameSceneController : MonoBehaviour
 	/// </summary>
 	private async UniTask GetAIAction()
 	{
-		await UniTask.Delay(1000);
-		
-		var move = await battleAI.GetMove(gameState);
+		await UniTask.DelayFrame(1);
+		cts = new CancellationTokenSource();
+		var move = await battleAI.GetMove(gameState, cts.Token);
 		Debug.Log("AIの指し手:" + move.Pretty());
 		var from = move.IsDrop() ? Square.NB : move.From();
 		var fromX = move.IsDrop() ? -1 : Converter.SquareToX(from);
@@ -606,6 +611,8 @@ public class GameSceneController : MonoBehaviour
 	/// <param name="isPlayerWin"></param>
 	public void ShowResult(bool isPlayerWin)
 	{
+		cts.Cancel();
+		view.ThinkingObject.SetActive(false);
 		view.SetResult(isPlayerWin);
 		view.ResultPanel.SetActive(true);
 	}
