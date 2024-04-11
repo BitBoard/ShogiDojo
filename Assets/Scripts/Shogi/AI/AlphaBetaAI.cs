@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using MyShogi.Model.Shogi.Core;
+using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 public class AlphaBetaAI : IShogiAI

@@ -3561,7 +3561,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u666E\u901A"
+  m_text: "13\u7D1A"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3cd970f88763448fcb64ed63faa88f13, type: 2}
   m_sharedMaterial: {fileID: 3178035673130208129, guid: 3cd970f88763448fcb64ed63faa88f13, type: 2}
@@ -6010,11 +6010,11 @@ MonoBehaviour:
   m_Value: 0
   m_Options:
     m_Options:
-    - m_Text: "\u666E\u901A"
+    - m_Text: "13\u7D1A"
       m_Image: {fileID: 0}
-    - m_Text: "\u5F31\u3044"
+    - m_Text: "14\u7D1A"
       m_Image: {fileID: 0}
-    - m_Text: "\u3059\u3054\u304F\u5F31\u3044"
+    - m_Text: "15\u7D1A"
       m_Image: {fileID: 0}
   m_OnValueChanged:
     m_PersistentCalls:
