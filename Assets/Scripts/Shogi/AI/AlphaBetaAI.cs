@@ -9,21 +9,31 @@ using Debug = UnityEngine.Debug;
 
 public class AlphaBetaAI : IShogiAI
 {
-	private const int _timeLimit = 10000; 
+	private const int _timeLimit = 5000; 
 	
 	public async UniTask<Move> GetMove(GameState gameState, CancellationToken token = default)
 	{
 		var baseMoves = gameState.GetLegalMoves();
 		Debug.Log("合法手の数:" + baseMoves.Count);
-		
-		var moves = new List<Move>();
 
-		while (baseMoves.Count > 0)
+		if (baseMoves.Count == 1)
 		{
-			moves.Add(baseMoves[Random.Range(0, baseMoves.Count)]);
-			baseMoves.RemoveAt(baseMoves.Count - 1);
+			await UniTask.Delay(1000, cancellationToken: token);
+			return baseMoves[0];
 		}
 		
+		var moves = new List<Move>(baseMoves);
+		
+		// 次の局面の評価が最も低い順にソートする
+		// 次の局面の視点が相手になるため低い順
+		moves.Sort((a, b) =>
+		{
+			var nextGameStateA = gameState.Clone();
+			nextGameStateA.Advance(a);
+			var nextGameStateB = gameState.Clone();
+			nextGameStateB.Advance(b);
+			return nextGameStateA.GetPieceScore().CompareTo(nextGameStateB.GetPieceScore());
+		});
 
 		// 合法手の中で最も評価値が高い手を選ぶ
 		var bestMove = moves[0];
